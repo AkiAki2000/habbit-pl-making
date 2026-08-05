@@ -10,6 +10,46 @@ import {
 const amountInputClass =
   "w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 focus:border-gray-500 focus:outline-none";
 
+// A native <input type="number"> snaps its value back to 0 the moment the
+// typed text is momentarily invalid (e.g. a lone "-" while entering a
+// negative amount), which made it impossible to type more than one
+// character at a time. This keeps the field as free text while the user is
+// typing and only commits/normalizes to a number on blur.
+function AmountInput({
+  value,
+  onCommit,
+}: {
+  value: number;
+  onCommit: (value: number) => void;
+}) {
+  const [text, setText] = useState(String(value));
+  const [prevValue, setPrevValue] = useState(value);
+  if (value !== prevValue) {
+    setPrevValue(value);
+    setText(String(value));
+  }
+
+  return (
+    <input
+      type="text"
+      className={amountInputClass}
+      value={text}
+      onChange={(e) => {
+        const raw = e.target.value;
+        if (!/^-?\d*$/.test(raw)) return;
+        setText(raw);
+        if (raw !== "" && raw !== "-") onCommit(Number(raw));
+      }}
+      onBlur={() => {
+        if (text === "" || text === "-") {
+          setText("0");
+          onCommit(0);
+        }
+      }}
+    />
+  );
+}
+
 function AmountFields({
   amounts,
   onChange,
@@ -22,13 +62,9 @@ function AmountFields({
       {EVALUATION_KEYS.map((key) => (
         <label key={key} className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">{EVALUATION_LABELS[key]}</span>
-          <input
-            type="number"
-            className={amountInputClass}
+          <AmountInput
             value={amounts[key]}
-            onChange={(e) =>
-              onChange({ ...amounts, [key]: Number(e.target.value) })
-            }
+            onCommit={(amount) => onChange({ ...amounts, [key]: amount })}
           />
         </label>
       ))}
