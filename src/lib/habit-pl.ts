@@ -1,9 +1,9 @@
-export type EvaluationKey = "achieved" | "notAchieved" | "bigMiss";
+export type EvaluationKey = "achieved" | "notApplicable" | "notAchieved";
 
 export interface EvaluationAmounts {
   achieved: number;
+  notApplicable: number;
   notAchieved: number;
-  bigMiss: number;
 }
 
 export type Segment = "health" | "family" | "selfInvestment" | "digitalHabits";
@@ -42,28 +42,44 @@ export interface HabitRecord {
 export interface AppState {
   habits: Habit[];
   records: HabitRecord[];
+  confirmedDates: string[];
 }
 
 export const EVALUATION_KEYS: EvaluationKey[] = [
   "achieved",
+  "notApplicable",
   "notAchieved",
-  "bigMiss",
 ];
 
 export const EVALUATION_LABELS: Record<EvaluationKey, string> = {
   achieved: "達成",
+  notApplicable: "該当なし",
   notAchieved: "未達",
+};
+
+// Records made under the old 3-tier design ("大きく未達") stay in history
+// as-is; this only supplies a label so they still render instead of "undefined".
+const LEGACY_EVALUATION_LABELS: Record<string, string> = {
   bigMiss: "大きく未達",
 };
 
+export function evaluationLabel(evaluation: string): string {
+  return (
+    EVALUATION_LABELS[evaluation as EvaluationKey] ??
+    LEGACY_EVALUATION_LABELS[evaluation] ??
+    evaluation
+  );
+}
+
 export const DEFAULT_AMOUNTS: EvaluationAmounts = {
   achieved: 100,
-  notAchieved: 0,
-  bigMiss: -100,
+  notApplicable: 0,
+  notAchieved: -100,
 };
 
 const HABITS_KEY = "habit-pl:habits";
 const RECORDS_KEY = "habit-pl:records";
+const CONFIRMED_DATES_KEY = "habit-pl:confirmed-dates";
 const LEGACY_HABIT_NAME_KEY = "habit-pl:habit-name";
 
 export function generateId(): string {
@@ -154,7 +170,7 @@ function createDefaultHabits(): Habit[] {
 
 interface LegacyRecord {
   date: string;
-  evaluation: EvaluationKey;
+  evaluation: string;
   amount: number;
 }
 
@@ -186,10 +202,10 @@ function migrateLegacyState(): AppState | null {
     id: generateId(),
     habitId: habit.id,
     date: r.date,
-    evaluation: r.evaluation,
+    evaluation: r.evaluation as EvaluationKey,
     amount: r.amount,
   }));
-  return { habits: [habit], records };
+  return { habits: [habit], records, confirmedDates: [] };
 }
 
 export function loadState(): AppState {
@@ -197,16 +213,24 @@ export function loadState(): AppState {
   if (!storedHabitsRaw) {
     const migrated = migrateLegacyState();
     if (migrated) return migrated;
-    return { habits: createDefaultHabits(), records: [] };
+    return { habits: createDefaultHabits(), records: [], confirmedDates: [] };
   }
 
   let habits: Habit[] = [];
   try {
-    // Habits saved before segments existed won't have this field yet.
-    const parsed = JSON.parse(storedHabitsRaw) as (Omit<Habit, "segment"> & {
+    // Habits saved before segments/notApplicable existed won't have these fields yet.
+    const parsed = JSON.parse(storedHabitsRaw) as (Omit<
+      Habit,
+      "segment" | "amounts"
+    > & {
       segment?: Segment;
+      amounts: Partial<EvaluationAmounts>;
     })[];
-    habits = parsed.map((h) => ({ ...h, segment: h.segment ?? DEFAULT_SEGMENT }));
+    habits = parsed.map((h) => ({
+      ...h,
+      segment: h.segment ?? DEFAULT_SEGMENT,
+      amounts: { ...DEFAULT_AMOUNTS, ...h.amounts },
+    }));
   } catch {
     habits = createDefaultHabits();
   }
@@ -220,7 +244,18 @@ export function loadState(): AppState {
       records = [];
     }
   }
-  return { habits, records };
+
+  let confirmedDates: string[] = [];
+  const storedConfirmedRaw = window.localStorage.getItem(CONFIRMED_DATES_KEY);
+  if (storedConfirmedRaw) {
+    try {
+      confirmedDates = JSON.parse(storedConfirmedRaw) as string[];
+    } catch {
+      confirmedDates = [];
+    }
+  }
+
+  return { habits, records, confirmedDates };
 }
 
 export function saveHabits(habits: Habit[]): void {
@@ -229,4 +264,8 @@ export function saveHabits(habits: Habit[]): void {
 
 export function saveRecords(records: HabitRecord[]): void {
   window.localStorage.setItem(RECORDS_KEY, JSON.stringify(records));
+}
+
+export function saveConfirmedDates(dates: string[]): void {
+  window.localStorage.setItem(CONFIRMED_DATES_KEY, JSON.stringify(dates));
 }

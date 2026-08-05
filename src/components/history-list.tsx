@@ -1,4 +1,4 @@
-import { EVALUATION_LABELS, formatYen, type Habit, type HabitRecord } from "@/lib/habit-pl";
+import { evaluationLabel, formatYen, type Habit, type HabitRecord } from "@/lib/habit-pl";
 
 function amountClass(amount: number): string {
   if (amount > 0) return "text-emerald-600";
@@ -54,7 +54,7 @@ export function HistoryList({
                         {habitNames.get(r.habitId) ?? "(削除済みの科目)"}
                       </span>
                       <span className="text-gray-500">
-                        {EVALUATION_LABELS[r.evaluation]}
+                        {evaluationLabel(r.evaluation)}
                       </span>
                       <span className={`font-semibold ${amountClass(r.amount)}`}>
                         {formatYen(r.amount)}

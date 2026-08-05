@@ -87,12 +87,17 @@ export function PeriodReport({
                     (sum, r) => sum + r.amount,
                     0,
                   );
-                  const achievedCount = habitRecords.filter(
+                  // "該当なし" isn't an outcome, so it's excluded from the
+                  // achievement rate entirely (both numerator and denominator).
+                  const applicableRecords = habitRecords.filter(
+                    (r) => r.evaluation !== "notApplicable",
+                  );
+                  const achievedCount = applicableRecords.filter(
                     (r) => r.evaluation === "achieved",
                   ).length;
                   const rate =
-                    habitRecords.length > 0
-                      ? Math.round((achievedCount / habitRecords.length) * 100)
+                    applicableRecords.length > 0
+                      ? Math.round((achievedCount / applicableRecords.length) * 100)
                       : null;
                   return (
                     <li
@@ -103,7 +108,7 @@ export function PeriodReport({
                       <span className="text-xs text-gray-400">
                         {rate === null
                           ? "記録なし"
-                          : `達成率 ${rate}%（${achievedCount}/${habitRecords.length}）`}
+                          : `達成率 ${rate}%（${achievedCount}/${applicableRecords.length}）`}
                       </span>
                       <span className={`font-semibold ${amountClass(habitTotal)}`}>
                         {formatYen(habitTotal)}

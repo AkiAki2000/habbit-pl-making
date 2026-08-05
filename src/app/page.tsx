@@ -15,6 +15,7 @@ import {
   type Segment,
   generateId,
   loadState,
+  saveConfirmedDates,
   saveHabits,
   saveRecords,
   startOfWeek,
@@ -24,6 +25,7 @@ import {
 export default function Home() {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [records, setRecords] = useState<HabitRecord[]>([]);
+  const [confirmedDates, setConfirmedDates] = useState<string[]>([]);
   const [loaded, setLoaded] = useState(false);
 
   // Reads localStorage once after mount: rendering the default state first
@@ -33,6 +35,7 @@ export default function Home() {
     const stored: AppState = loadState();
     setHabits(stored.habits);
     setRecords(stored.records);
+    setConfirmedDates(stored.confirmedDates);
     setLoaded(true);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
@@ -44,6 +47,10 @@ export default function Home() {
   useEffect(() => {
     if (loaded) saveRecords(records);
   }, [records, loaded]);
+
+  useEffect(() => {
+    if (loaded) saveConfirmedDates(confirmedDates);
+  }, [confirmedDates, loaded]);
 
   const today = todayString();
   const weekStart = startOfWeek(today);
@@ -96,6 +103,14 @@ export default function Home() {
     setHabits((prev) => prev.filter((h) => h.id !== habitId));
   };
 
+  const confirmDay = (date: string) => {
+    setConfirmedDates((prev) => (prev.includes(date) ? prev : [...prev, date]));
+  };
+
+  const unconfirmDay = (date: string) => {
+    setConfirmedDates((prev) => prev.filter((d) => d !== date));
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 sm:py-12">
       <main className="mx-auto flex w-full max-w-md flex-col gap-6">
@@ -116,7 +131,10 @@ export default function Home() {
           habits={habits}
           records={records}
           today={today}
+          isConfirmed={confirmedDates.includes(today)}
           onRecord={recordToday}
+          onConfirm={() => confirmDay(today)}
+          onUnconfirm={() => unconfirmDay(today)}
         />
 
         <PeriodReport habits={habits} records={records} />

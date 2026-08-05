@@ -1,22 +1,35 @@
 import {
   EVALUATION_KEYS,
   EVALUATION_LABELS,
+  evaluationLabel,
   formatYen,
   type EvaluationKey,
   type Habit,
   type HabitRecord,
 } from "@/lib/habit-pl";
 
+function amountClass(amount: number): string {
+  if (amount > 0) return "text-emerald-600";
+  if (amount < 0) return "text-red-600";
+  return "text-gray-500";
+}
+
 export function DailyEntry({
   habits,
   records,
   today,
+  isConfirmed,
   onRecord,
+  onConfirm,
+  onUnconfirm,
 }: {
   habits: Habit[];
   records: HabitRecord[];
   today: string;
+  isConfirmed: boolean;
   onRecord: (habitId: string, evaluation: EvaluationKey) => void;
+  onConfirm: () => void;
+  onUnconfirm: () => void;
 }) {
   if (habits.length === 0) {
     return (
@@ -29,14 +42,62 @@ export function DailyEntry({
     );
   }
 
+  const todayRecords = (habitId: string) =>
+    records.find((r) => r.habitId === habitId && r.date === today);
+  const recordedCount = habits.filter((h) => todayRecords(h.id)).length;
+
+  if (isConfirmed) {
+    return (
+      <section className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-gray-500">今日（{today}）の記録</p>
+          <button
+            type="button"
+            onClick={onUnconfirm}
+            className="text-xs text-gray-400 underline hover:text-gray-600"
+          >
+            編集し直す
+          </button>
+        </div>
+        <div className="flex flex-col divide-y divide-gray-100 overflow-hidden rounded-lg border border-gray-200 bg-white">
+          <p className="px-4 py-2 text-xs font-medium text-emerald-700">
+            確定済み
+          </p>
+          {habits.map((habit) => {
+            const record = todayRecords(habit.id);
+            return (
+              <div
+                key={habit.id}
+                className="flex items-center justify-between px-4 py-2 text-sm"
+              >
+                <span className="text-gray-700">{habit.name}</span>
+                <span className="text-xs text-gray-400">
+                  {record ? evaluationLabel(record.evaluation) : "未記録"}
+                </span>
+                <span
+                  className={`font-semibold ${record ? amountClass(record.amount) : "text-gray-400"}`}
+                >
+                  {record ? formatYen(record.amount) : "-"}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="flex flex-col gap-3">
-      <p className="text-sm text-gray-500">今日（{today}）の記録</p>
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-500">今日（{today}）の記録</p>
+        <p className="text-xs text-gray-400">
+          {recordedCount}/{habits.length} 記録済み
+        </p>
+      </div>
       <div className="flex flex-col gap-3">
         {habits.map((habit) => {
-          const todayRecord = records.find(
-            (r) => r.habitId === habit.id && r.date === today,
-          );
+          const todayRecord = todayRecords(habit.id);
           return (
             <div
               key={habit.id}
@@ -66,6 +127,13 @@ export function DailyEntry({
           );
         })}
       </div>
+      <button
+        type="button"
+        onClick={onConfirm}
+        className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
+      >
+        本日を確定する
+      </button>
     </section>
   );
 }
