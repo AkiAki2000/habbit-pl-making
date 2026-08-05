@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { DailyEntry } from "@/components/daily-entry";
 import { HabitSettings } from "@/components/habit-settings";
 import { HistoryList } from "@/components/history-list";
+import { PeriodReport } from "@/components/period-report";
 import { StatTile } from "@/components/stat-tile";
 import {
   type AppState,
@@ -11,6 +12,7 @@ import {
   type EvaluationKey,
   type Habit,
   type HabitRecord,
+  type Segment,
   generateId,
   loadState,
   saveHabits,
@@ -70,13 +72,20 @@ export default function Home() {
     });
   };
 
-  const addHabit = (name: string, amounts: EvaluationAmounts) => {
-    setHabits((prev) => [...prev, { id: generateId(), name, amounts }]);
+  const addHabit = (
+    name: string,
+    segment: Segment,
+    amounts: EvaluationAmounts,
+  ) => {
+    setHabits((prev) => [
+      ...prev,
+      { id: generateId(), name, segment, amounts },
+    ]);
   };
 
   const updateHabit = (
     habitId: string,
-    updates: Partial<Pick<Habit, "name" | "amounts">>,
+    updates: Partial<Pick<Habit, "name" | "segment" | "amounts">>,
   ) => {
     setHabits((prev) =>
       prev.map((h) => (h.id === habitId ? { ...h, ...updates } : h)),
@@ -109,6 +118,8 @@ export default function Home() {
           today={today}
           onRecord={recordToday}
         />
+
+        <PeriodReport habits={habits} records={records} />
 
         <HistoryList records={records} habits={habits} />
 

@@ -3,12 +3,41 @@ import {
   DEFAULT_AMOUNTS,
   EVALUATION_KEYS,
   EVALUATION_LABELS,
+  SEGMENTS,
+  SEGMENT_LABELS,
   type EvaluationAmounts,
   type Habit,
+  type Segment,
 } from "@/lib/habit-pl";
 
 const amountInputClass =
   "w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 focus:border-gray-500 focus:outline-none";
+
+const segmentSelectClass =
+  "w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 focus:border-gray-500 focus:outline-none";
+
+function SegmentSelect({
+  value,
+  onChange,
+}: {
+  value: Segment;
+  onChange: (segment: Segment) => void;
+}) {
+  return (
+    <select
+      className={segmentSelectClass}
+      value={value}
+      onChange={(e) => onChange(e.target.value as Segment)}
+      aria-label="セグメント"
+    >
+      {SEGMENTS.map((segment) => (
+        <option key={segment} value={segment}>
+          {SEGMENT_LABELS[segment]}
+        </option>
+      ))}
+    </select>
+  );
+}
 
 // A native <input type="number"> snaps its value back to 0 the moment the
 // typed text is momentarily invalid (e.g. a lone "-" while entering a
@@ -78,7 +107,10 @@ function HabitRow({
   onDelete,
 }: {
   habit: Habit;
-  onUpdate: (habitId: string, updates: Partial<Pick<Habit, "name" | "amounts">>) => void;
+  onUpdate: (
+    habitId: string,
+    updates: Partial<Pick<Habit, "name" | "segment" | "amounts">>,
+  ) => void;
   onDelete: (habitId: string) => void;
 }) {
   return (
@@ -98,6 +130,10 @@ function HabitRow({
           削除
         </button>
       </div>
+      <SegmentSelect
+        value={habit.segment}
+        onChange={(segment) => onUpdate(habit.id, { segment })}
+      />
       <AmountFields
         amounts={habit.amounts}
         onChange={(amounts) => onUpdate(habit.id, { amounts })}
@@ -113,11 +149,15 @@ export function HabitSettings({
   onDelete,
 }: {
   habits: Habit[];
-  onAdd: (name: string, amounts: EvaluationAmounts) => void;
-  onUpdate: (habitId: string, updates: Partial<Pick<Habit, "name" | "amounts">>) => void;
+  onAdd: (name: string, segment: Segment, amounts: EvaluationAmounts) => void;
+  onUpdate: (
+    habitId: string,
+    updates: Partial<Pick<Habit, "name" | "segment" | "amounts">>,
+  ) => void;
   onDelete: (habitId: string) => void;
 }) {
   const [newName, setNewName] = useState("");
+  const [newSegment, setNewSegment] = useState<Segment>(SEGMENTS[0]);
   const [newAmounts, setNewAmounts] = useState<EvaluationAmounts>({
     ...DEFAULT_AMOUNTS,
   });
@@ -125,8 +165,9 @@ export function HabitSettings({
   const handleAdd = () => {
     const name = newName.trim();
     if (!name) return;
-    onAdd(name, newAmounts);
+    onAdd(name, newSegment, newAmounts);
     setNewName("");
+    setNewSegment(SEGMENTS[0]);
     setNewAmounts({ ...DEFAULT_AMOUNTS });
   };
 
@@ -152,6 +193,7 @@ export function HabitSettings({
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
         />
+        <SegmentSelect value={newSegment} onChange={setNewSegment} />
         <AmountFields amounts={newAmounts} onChange={setNewAmounts} />
         <button
           type="button"
