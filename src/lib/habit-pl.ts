@@ -43,6 +43,7 @@ export interface AppState {
   habits: Habit[];
   records: HabitRecord[];
   confirmedDates: string[];
+  startDate: string;
 }
 
 export const EVALUATION_KEYS: EvaluationKey[] = [
@@ -80,6 +81,7 @@ export const DEFAULT_AMOUNTS: EvaluationAmounts = {
 const HABITS_KEY = "habit-pl:habits";
 const RECORDS_KEY = "habit-pl:records";
 const CONFIRMED_DATES_KEY = "habit-pl:confirmed-dates";
+const START_DATE_KEY = "habit-pl:start-date";
 const LEGACY_HABIT_NAME_KEY = "habit-pl:habit-name";
 
 export function generateId(): string {
@@ -122,6 +124,38 @@ export function startOfWeek(dateStr: string): string {
   const diffToMonday = day === 0 ? -6 : 1 - day;
   d.setDate(d.getDate() + diffToMonday);
   return formatDate(d);
+}
+
+function datesBetween(start: string, end: string): string[] {
+  const dates: string[] = [];
+  for (let d = start; d <= end; d = addDays(d, 1)) dates.push(d);
+  return dates;
+}
+
+export interface EntryQueue {
+  /** The date the daily entry UI should target: the oldest unconfirmed day, or today once caught up. */
+  activeDate: string;
+  /** Unconfirmed days strictly before today, i.e. still owed. */
+  backlogCount: number;
+}
+
+/**
+ * You can never get ahead and record a future day, but if you skipped a few
+ * days, this walks the entry UI through them oldest-first: `activeDate` stays
+ * on the earliest unconfirmed day (even if that's in the past) until it's
+ * confirmed, only reaching `today` once everything before it is caught up.
+ */
+export function getEntryQueue(
+  startDate: string,
+  today: string,
+  confirmedDates: string[],
+): EntryQueue {
+  const unconfirmed = datesBetween(startDate, today).filter(
+    (d) => !confirmedDates.includes(d),
+  );
+  const backlogCount = unconfirmed.filter((d) => d < today).length;
+  const activeDate = unconfirmed.length > 0 ? unconfirmed[0] : today;
+  return { activeDate, backlogCount };
 }
 
 export type PeriodKey = "last7" | "last30" | "thisQuarter" | "ytd";
@@ -179,7 +213,7 @@ interface LegacyRecord {
  * without habitId) into the multi-habit shape, so existing users keep their
  * history instead of it silently disappearing.
  */
-function migrateLegacyState(): AppState | null {
+function migrateLegacyState(startDate: string): AppState | null {
   const legacyRecordsRaw = window.localStorage.getItem(RECORDS_KEY);
   if (!legacyRecordsRaw) return null;
 
@@ -205,15 +239,35 @@ function migrateLegacyState(): AppState | null {
     evaluation: r.evaluation as EvaluationKey,
     amount: r.amount,
   }));
-  return { habits: [habit], records, confirmedDates: [] };
+  return { habits: [habit], records, confirmedDates: [], startDate };
+}
+
+/**
+ * The date catch-up backfill starts counting from. Reads the persisted value,
+ * or initializes it to today on first run (whether that's a brand-new
+ * install or an existing one upgrading to this feature) — either way there's
+ * no backlog before the day this concept was introduced.
+ */
+function loadOrInitStartDate(): string {
+  const stored = window.localStorage.getItem(START_DATE_KEY);
+  if (stored) return stored;
+  const today = todayString();
+  window.localStorage.setItem(START_DATE_KEY, today);
+  return today;
 }
 
 export function loadState(): AppState {
+  const startDate = loadOrInitStartDate();
   const storedHabitsRaw = window.localStorage.getItem(HABITS_KEY);
   if (!storedHabitsRaw) {
-    const migrated = migrateLegacyState();
+    const migrated = migrateLegacyState(startDate);
     if (migrated) return migrated;
-    return { habits: createDefaultHabits(), records: [], confirmedDates: [] };
+    return {
+      habits: createDefaultHabits(),
+      records: [],
+      confirmedDates: [],
+      startDate,
+    };
   }
 
   let habits: Habit[] = [];
@@ -255,7 +309,7 @@ export function loadState(): AppState {
     }
   }
 
-  return { habits, records, confirmedDates };
+  return { habits, records, confirmedDates, startDate };
 }
 
 export function saveHabits(habits: Habit[]): void {

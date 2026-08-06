@@ -17,7 +17,9 @@ function amountClass(amount: number): string {
 export function DailyEntry({
   habits,
   records,
-  today,
+  targetDate,
+  isToday,
+  backlogCount,
   isConfirmed,
   onRecord,
   onConfirm,
@@ -25,16 +27,20 @@ export function DailyEntry({
 }: {
   habits: Habit[];
   records: HabitRecord[];
-  today: string;
+  targetDate: string;
+  isToday: boolean;
+  backlogCount: number;
   isConfirmed: boolean;
   onRecord: (habitId: string, evaluation: EvaluationKey) => void;
   onConfirm: () => void;
   onUnconfirm: () => void;
 }) {
+  const heading = isToday ? `今日（${targetDate}）の記録` : `${targetDate}の記録`;
+
   if (habits.length === 0) {
     return (
       <section className="flex flex-col gap-3">
-        <p className="text-sm text-gray-500">今日（{today}）の記録</p>
+        <p className="text-sm text-gray-500">{heading}</p>
         <p className="rounded-lg border border-dashed border-gray-300 px-4 py-6 text-center text-sm text-gray-400">
           まず科目を登録してください
         </p>
@@ -42,15 +48,22 @@ export function DailyEntry({
     );
   }
 
-  const todayRecords = (habitId: string) =>
-    records.find((r) => r.habitId === habitId && r.date === today);
-  const recordedCount = habits.filter((h) => todayRecords(h.id)).length;
+  const recordFor = (habitId: string) =>
+    records.find((r) => r.habitId === habitId && r.date === targetDate);
+  const recordedCount = habits.filter((h) => recordFor(h.id)).length;
+
+  const backlogBanner = !isToday && (
+    <p className="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-700">
+      未確定の日が{backlogCount}日あります。古い日から順に表示しています。
+    </p>
+  );
 
   if (isConfirmed) {
     return (
       <section className="flex flex-col gap-3">
+        {backlogBanner}
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-500">今日（{today}）の記録</p>
+          <p className="text-sm text-gray-500">{heading}</p>
           <button
             type="button"
             onClick={onUnconfirm}
@@ -64,7 +77,7 @@ export function DailyEntry({
             確定済み
           </p>
           {habits.map((habit) => {
-            const record = todayRecords(habit.id);
+            const record = recordFor(habit.id);
             return (
               <div
                 key={habit.id}
@@ -89,15 +102,16 @@ export function DailyEntry({
 
   return (
     <section className="flex flex-col gap-3">
+      {backlogBanner}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">今日（{today}）の記録</p>
+        <p className="text-sm text-gray-500">{heading}</p>
         <p className="text-xs text-gray-400">
           {recordedCount}/{habits.length} 記録済み
         </p>
       </div>
       <div className="flex flex-col gap-3">
         {habits.map((habit) => {
-          const todayRecord = todayRecords(habit.id);
+          const targetRecord = recordFor(habit.id);
           return (
             <div
               key={habit.id}
@@ -111,7 +125,7 @@ export function DailyEntry({
                     type="button"
                     onClick={() => onRecord(habit.id, key)}
                     className={`flex flex-col items-center gap-1 rounded-lg border px-2 py-2.5 text-sm font-medium transition-colors ${
-                      todayRecord?.evaluation === key
+                      targetRecord?.evaluation === key
                         ? "border-gray-900 bg-gray-900 text-white"
                         : "border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
                     }`}
@@ -132,7 +146,7 @@ export function DailyEntry({
         onClick={onConfirm}
         className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
       >
-        本日を確定する
+        {isToday ? "本日を確定する" : "この日を確定する"}
       </button>
     </section>
   );

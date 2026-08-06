@@ -14,6 +14,7 @@ import {
   type HabitRecord,
   type Segment,
   generateId,
+  getEntryQueue,
   loadState,
   saveConfirmedDates,
   saveHabits,
@@ -26,6 +27,7 @@ export default function Home() {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [records, setRecords] = useState<HabitRecord[]>([]);
   const [confirmedDates, setConfirmedDates] = useState<string[]>([]);
+  const [startDate, setStartDate] = useState(todayString());
   const [loaded, setLoaded] = useState(false);
 
   // Reads localStorage once after mount: rendering the default state first
@@ -36,6 +38,7 @@ export default function Home() {
     setHabits(stored.habits);
     setRecords(stored.records);
     setConfirmedDates(stored.confirmedDates);
+    setStartDate(stored.startDate);
     setLoaded(true);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
@@ -59,19 +62,28 @@ export default function Home() {
     .reduce((sum, r) => sum + r.amount, 0);
   const cumulativeTotal = records.reduce((sum, r) => sum + r.amount, 0);
 
-  const recordToday = (habitId: string, evaluation: EvaluationKey) => {
+  // You can never get ahead and record a future day, but if a few days were
+  // missed, this keeps the entry UI on the oldest unconfirmed day (even if
+  // that's in the past) so they get caught up one at a time, oldest first.
+  const { activeDate, backlogCount } = getEntryQueue(
+    startDate,
+    today,
+    confirmedDates,
+  );
+
+  const recordForActiveDate = (habitId: string, evaluation: EvaluationKey) => {
     const habit = habits.find((h) => h.id === habitId);
     if (!habit) return;
     setRecords((prev) => {
-      const withoutToday = prev.filter(
-        (r) => !(r.habitId === habitId && r.date === today),
+      const withoutDate = prev.filter(
+        (r) => !(r.habitId === habitId && r.date === activeDate),
       );
       return [
-        ...withoutToday,
+        ...withoutDate,
         {
           id: generateId(),
           habitId,
-          date: today,
+          date: activeDate,
           evaluation,
           amount: habit.amounts[evaluation],
         },
@@ -130,11 +142,13 @@ export default function Home() {
         <DailyEntry
           habits={habits}
           records={records}
-          today={today}
-          isConfirmed={confirmedDates.includes(today)}
-          onRecord={recordToday}
-          onConfirm={() => confirmDay(today)}
-          onUnconfirm={() => unconfirmDay(today)}
+          targetDate={activeDate}
+          isToday={activeDate === today}
+          backlogCount={backlogCount}
+          isConfirmed={confirmedDates.includes(activeDate)}
+          onRecord={recordForActiveDate}
+          onConfirm={() => confirmDay(activeDate)}
+          onUnconfirm={() => unconfirmDay(activeDate)}
         />
 
         <PeriodReport habits={habits} records={records} />
