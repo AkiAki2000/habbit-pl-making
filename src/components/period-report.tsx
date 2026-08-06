@@ -4,14 +4,13 @@ import { useState } from "react";
 import {
   PERIODS,
   PERIOD_LABELS,
-  SEGMENTS,
-  SEGMENT_LABELS,
   formatYen,
   periodRange,
   todayString,
   type Habit,
   type HabitRecord,
   type PeriodKey,
+  type Segment,
 } from "@/lib/habit-pl";
 
 function amountClass(amount: number): string {
@@ -23,9 +22,11 @@ function amountClass(amount: number): string {
 export function PeriodReport({
   habits,
   records,
+  segments,
 }: {
   habits: Habit[];
   records: HabitRecord[];
+  segments: Segment[];
 }) {
   const [period, setPeriod] = useState<PeriodKey>("last7");
   const { start, end } = periodRange(period, todayString());
@@ -56,7 +57,7 @@ export function PeriodReport({
       </p>
 
       <div className="flex flex-col gap-3">
-        {SEGMENTS.map((segment) => {
+        {segments.map((segment) => {
           const segmentHabits = habits.filter((h) => h.segment === segment);
           if (segmentHabits.length === 0) return null;
 
@@ -72,7 +73,7 @@ export function PeriodReport({
             >
               <div className="flex items-center justify-between bg-gray-50 px-4 py-2">
                 <span className="text-sm font-medium text-gray-700">
-                  {SEGMENT_LABELS[segment]}
+                  {segment}
                 </span>
                 <span className={`text-sm font-semibold ${amountClass(segmentTotal)}`}>
                   {formatYen(segmentTotal)}

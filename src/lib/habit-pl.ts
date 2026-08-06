@@ -6,29 +6,41 @@ export interface EvaluationAmounts {
   notAchieved: number;
 }
 
-export type Segment = "health" | "family" | "selfInvestment" | "digitalHabits";
+// Segments are freeform, user- (or onboarding-) defined names, not a fixed
+// enum: different people organize their habits along different axes.
+export type Segment = string;
 
-export const SEGMENTS: Segment[] = [
-  "health",
-  "family",
-  "selfInvestment",
-  "digitalHabits",
+export const DEFAULT_SEGMENTS: Segment[] = [
+  "健康",
+  "家族",
+  "自己投資",
+  "デジタル習慣",
 ];
 
-export const SEGMENT_LABELS: Record<Segment, string> = {
+const DEFAULT_SEGMENT: Segment = DEFAULT_SEGMENTS[0];
+
+// Segments were a fixed 4-value enum (English keys) before they became
+// freeform; this maps old habit records' `segment` field to its Japanese
+// display name so existing data doesn't suddenly show raw English keys.
+const LEGACY_SEGMENT_LABELS: Record<string, string> = {
   health: "健康",
   family: "家族",
   selfInvestment: "自己投資",
   digitalHabits: "デジタル習慣",
 };
 
-const DEFAULT_SEGMENT: Segment = "health";
+function normalizeSegment(segment: string | undefined): Segment {
+  if (!segment) return DEFAULT_SEGMENT;
+  return LEGACY_SEGMENT_LABELS[segment] ?? segment;
+}
 
 export interface Habit {
   id: string;
   name: string;
   segment: Segment;
   amounts: EvaluationAmounts;
+  /** Optional free-text reminder of what counts as each evaluation tier, e.g. set via onboarding. */
+  note?: string;
 }
 
 export interface HabitRecord {
@@ -44,6 +56,7 @@ export interface AppState {
   records: HabitRecord[];
   confirmedDates: string[];
   startDate: string;
+  segments: Segment[];
 }
 
 export const EVALUATION_KEYS: EvaluationKey[] = [
@@ -82,6 +95,7 @@ const HABITS_KEY = "habit-pl:habits";
 const RECORDS_KEY = "habit-pl:records";
 const CONFIRMED_DATES_KEY = "habit-pl:confirmed-dates";
 const START_DATE_KEY = "habit-pl:start-date";
+const SEGMENTS_KEY = "habit-pl:segments";
 const LEGACY_HABIT_NAME_KEY = "habit-pl:habit-name";
 
 export function generateId(): string {
@@ -202,6 +216,19 @@ function createDefaultHabits(): Habit[] {
   }));
 }
 
+/** The segment list, extended with any segment names already in use by habits but not yet listed. */
+function reconcileSegments(segments: Segment[], habits: Habit[]): Segment[] {
+  const known = new Set(segments);
+  const extra: Segment[] = [];
+  for (const habit of habits) {
+    if (!known.has(habit.segment)) {
+      known.add(habit.segment);
+      extra.push(habit.segment);
+    }
+  }
+  return [...segments, ...extra];
+}
+
 interface LegacyRecord {
   date: string;
   evaluation: string;
@@ -239,7 +266,13 @@ function migrateLegacyState(startDate: string): AppState | null {
     evaluation: r.evaluation as EvaluationKey,
     amount: r.amount,
   }));
-  return { habits: [habit], records, confirmedDates: [], startDate };
+  return {
+    habits: [habit],
+    records,
+    confirmedDates: [],
+    startDate,
+    segments: reconcileSegments(DEFAULT_SEGMENTS, [habit]),
+  };
 }
 
 /**
@@ -256,17 +289,30 @@ function loadOrInitStartDate(): string {
   return today;
 }
 
+function loadStoredSegments(): Segment[] | null {
+  const raw = window.localStorage.getItem(SEGMENTS_KEY);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as string[];
+    return Array.isArray(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
 export function loadState(): AppState {
   const startDate = loadOrInitStartDate();
   const storedHabitsRaw = window.localStorage.getItem(HABITS_KEY);
   if (!storedHabitsRaw) {
     const migrated = migrateLegacyState(startDate);
     if (migrated) return migrated;
+    const habits = createDefaultHabits();
     return {
-      habits: createDefaultHabits(),
+      habits,
       records: [],
       confirmedDates: [],
       startDate,
+      segments: reconcileSegments(DEFAULT_SEGMENTS, habits),
     };
   }
 
@@ -277,12 +323,12 @@ export function loadState(): AppState {
       Habit,
       "segment" | "amounts"
     > & {
-      segment?: Segment;
+      segment?: string;
       amounts: Partial<EvaluationAmounts>;
     })[];
     habits = parsed.map((h) => ({
       ...h,
-      segment: h.segment ?? DEFAULT_SEGMENT,
+      segment: normalizeSegment(h.segment),
       amounts: { ...DEFAULT_AMOUNTS, ...h.amounts },
     }));
   } catch {
@@ -309,11 +355,20 @@ export function loadState(): AppState {
     }
   }
 
-  return { habits, records, confirmedDates, startDate };
+  const segments = reconcileSegments(
+    loadStoredSegments() ?? DEFAULT_SEGMENTS,
+    habits,
+  );
+
+  return { habits, records, confirmedDates, startDate, segments };
 }
 
 export function saveHabits(habits: Habit[]): void {
   window.localStorage.setItem(HABITS_KEY, JSON.stringify(habits));
+}
+
+export function saveSegments(segments: Segment[]): void {
+  window.localStorage.setItem(SEGMENTS_KEY, JSON.stringify(segments));
 }
 
 export function saveRecords(records: HabitRecord[]): void {

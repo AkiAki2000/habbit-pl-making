@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { DailyEntry } from "@/components/daily-entry";
 import { HabitSettings } from "@/components/habit-settings";
@@ -7,6 +8,7 @@ import { HistoryList } from "@/components/history-list";
 import { PeriodReport } from "@/components/period-report";
 import { StatTile } from "@/components/stat-tile";
 import {
+  DEFAULT_SEGMENTS,
   type AppState,
   type EvaluationAmounts,
   type EvaluationKey,
@@ -19,6 +21,7 @@ import {
   saveConfirmedDates,
   saveHabits,
   saveRecords,
+  saveSegments,
   startOfWeek,
   todayString,
 } from "@/lib/habit-pl";
@@ -28,6 +31,7 @@ export default function Home() {
   const [records, setRecords] = useState<HabitRecord[]>([]);
   const [confirmedDates, setConfirmedDates] = useState<string[]>([]);
   const [startDate, setStartDate] = useState(todayString());
+  const [segments, setSegments] = useState<Segment[]>(DEFAULT_SEGMENTS);
   const [loaded, setLoaded] = useState(false);
 
   // Reads localStorage once after mount: rendering the default state first
@@ -39,6 +43,7 @@ export default function Home() {
     setRecords(stored.records);
     setConfirmedDates(stored.confirmedDates);
     setStartDate(stored.startDate);
+    setSegments(stored.segments);
     setLoaded(true);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
@@ -54,6 +59,10 @@ export default function Home() {
   useEffect(() => {
     if (loaded) saveConfirmedDates(confirmedDates);
   }, [confirmedDates, loaded]);
+
+  useEffect(() => {
+    if (loaded) saveSegments(segments);
+  }, [segments, loaded]);
 
   const today = todayString();
   const weekStart = startOfWeek(today);
@@ -115,6 +124,10 @@ export default function Home() {
     setHabits((prev) => prev.filter((h) => h.id !== habitId));
   };
 
+  const addSegment = (segment: Segment) => {
+    setSegments((prev) => (prev.includes(segment) ? prev : [...prev, segment]));
+  };
+
   const confirmDay = (date: string) => {
     setConfirmedDates((prev) => (prev.includes(date) ? prev : [...prev, date]));
   };
@@ -126,8 +139,14 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 sm:py-12">
       <main className="mx-auto flex w-full max-w-md flex-col gap-6">
-        <header>
+        <header className="flex items-center justify-between">
           <p className="text-sm font-medium text-gray-500">習慣PL</p>
+          <Link
+            href="/onboarding"
+            className="text-xs text-gray-400 underline hover:text-gray-600"
+          >
+            AIと一緒に設計する
+          </Link>
         </header>
 
         <section className="grid grid-cols-2 gap-3">
@@ -151,15 +170,17 @@ export default function Home() {
           onUnconfirm={() => unconfirmDay(activeDate)}
         />
 
-        <PeriodReport habits={habits} records={records} />
+        <PeriodReport habits={habits} records={records} segments={segments} />
 
         <HistoryList records={records} habits={habits} />
 
         <HabitSettings
           habits={habits}
+          segments={segments}
           onAdd={addHabit}
           onUpdate={updateHabit}
           onDelete={deleteHabit}
+          onAddSegment={addSegment}
         />
       </main>
     </div>

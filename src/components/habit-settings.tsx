@@ -3,8 +3,6 @@ import {
   DEFAULT_AMOUNTS,
   EVALUATION_KEYS,
   EVALUATION_LABELS,
-  SEGMENTS,
-  SEGMENT_LABELS,
   type EvaluationAmounts,
   type Habit,
   type Segment,
@@ -16,25 +14,80 @@ const amountInputClass =
 const segmentSelectClass =
   "w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 focus:border-gray-500 focus:outline-none";
 
+const NEW_SEGMENT_OPTION = "__new__";
+
 function SegmentSelect({
+  segments,
   value,
   onChange,
+  onAddSegment,
 }: {
+  segments: Segment[];
   value: Segment;
   onChange: (segment: Segment) => void;
+  onAddSegment: (segment: Segment) => void;
 }) {
+  const [addingSegment, setAddingSegment] = useState(false);
+  const [draftSegment, setDraftSegment] = useState("");
+
+  if (addingSegment) {
+    return (
+      <div className="flex items-center gap-2">
+        <input
+          autoFocus
+          className={segmentSelectClass}
+          placeholder="新しいセグメント名"
+          value={draftSegment}
+          onChange={(e) => setDraftSegment(e.target.value)}
+          aria-label="新しいセグメント名"
+        />
+        <button
+          type="button"
+          onClick={() => {
+            const name = draftSegment.trim();
+            if (!name) return;
+            onAddSegment(name);
+            setDraftSegment("");
+            setAddingSegment(false);
+          }}
+          disabled={!draftSegment.trim()}
+          className="shrink-0 rounded-md bg-gray-900 px-3 py-1.5 text-sm text-white disabled:opacity-40"
+        >
+          追加
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setDraftSegment("");
+            setAddingSegment(false);
+          }}
+          className="shrink-0 text-xs text-gray-400 hover:text-gray-600"
+        >
+          取消
+        </button>
+      </div>
+    );
+  }
+
   return (
     <select
       className={segmentSelectClass}
       value={value}
-      onChange={(e) => onChange(e.target.value as Segment)}
+      onChange={(e) => {
+        if (e.target.value === NEW_SEGMENT_OPTION) {
+          setAddingSegment(true);
+          return;
+        }
+        onChange(e.target.value);
+      }}
       aria-label="セグメント"
     >
-      {SEGMENTS.map((segment) => (
+      {segments.map((segment) => (
         <option key={segment} value={segment}>
-          {SEGMENT_LABELS[segment]}
+          {segment}
         </option>
       ))}
+      <option value={NEW_SEGMENT_OPTION}>＋ 新しいセグメントを追加</option>
     </select>
   );
 }
@@ -103,15 +156,19 @@ function AmountFields({
 
 function HabitRow({
   habit,
+  segments,
   onUpdate,
   onDelete,
+  onAddSegment,
 }: {
   habit: Habit;
+  segments: Segment[];
   onUpdate: (
     habitId: string,
     updates: Partial<Pick<Habit, "name" | "segment" | "amounts">>,
   ) => void;
   onDelete: (habitId: string) => void;
+  onAddSegment: (segment: Segment) => void;
 }) {
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4">
@@ -130,9 +187,15 @@ function HabitRow({
           削除
         </button>
       </div>
+      {habit.note && <p className="text-xs text-gray-400">{habit.note}</p>}
       <SegmentSelect
+        segments={segments}
         value={habit.segment}
         onChange={(segment) => onUpdate(habit.id, { segment })}
+        onAddSegment={(segment) => {
+          onAddSegment(segment);
+          onUpdate(habit.id, { segment });
+        }}
       />
       <AmountFields
         amounts={habit.amounts}
@@ -144,20 +207,24 @@ function HabitRow({
 
 export function HabitSettings({
   habits,
+  segments,
   onAdd,
   onUpdate,
   onDelete,
+  onAddSegment,
 }: {
   habits: Habit[];
+  segments: Segment[];
   onAdd: (name: string, segment: Segment, amounts: EvaluationAmounts) => void;
   onUpdate: (
     habitId: string,
     updates: Partial<Pick<Habit, "name" | "segment" | "amounts">>,
   ) => void;
   onDelete: (habitId: string) => void;
+  onAddSegment: (segment: Segment) => void;
 }) {
   const [newName, setNewName] = useState("");
-  const [newSegment, setNewSegment] = useState<Segment>(SEGMENTS[0]);
+  const [newSegment, setNewSegment] = useState<Segment>(segments[0]);
   const [newAmounts, setNewAmounts] = useState<EvaluationAmounts>({
     ...DEFAULT_AMOUNTS,
   });
@@ -167,7 +234,7 @@ export function HabitSettings({
     if (!name) return;
     onAdd(name, newSegment, newAmounts);
     setNewName("");
-    setNewSegment(SEGMENTS[0]);
+    setNewSegment(segments[0]);
     setNewAmounts({ ...DEFAULT_AMOUNTS });
   };
 
@@ -180,8 +247,10 @@ export function HabitSettings({
           <HabitRow
             key={habit.id}
             habit={habit}
+            segments={segments}
             onUpdate={onUpdate}
             onDelete={onDelete}
+            onAddSegment={onAddSegment}
           />
         ))}
       </div>
@@ -193,7 +262,15 @@ export function HabitSettings({
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
         />
-        <SegmentSelect value={newSegment} onChange={setNewSegment} />
+        <SegmentSelect
+          segments={segments}
+          value={newSegment}
+          onChange={setNewSegment}
+          onAddSegment={(segment) => {
+            onAddSegment(segment);
+            setNewSegment(segment);
+          }}
+        />
         <AmountFields amounts={newAmounts} onChange={setNewAmounts} />
         <button
           type="button"
