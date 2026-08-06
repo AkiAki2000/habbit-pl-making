@@ -45,6 +45,7 @@ export function OnboardingChat() {
   const [saved, setSaved] = useState(false);
   const startedRef = useRef(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (startedRef.current) return;
@@ -60,7 +61,7 @@ export function OnboardingChat() {
   }, []);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [history, loading]);
 
   const send = async () => {
@@ -106,15 +107,18 @@ export function OnboardingChat() {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col gap-4 px-4 py-8 sm:py-12">
-      <header className="flex flex-col gap-1">
+    <div className="mx-auto flex h-dvh w-full max-w-md flex-col px-4 sm:py-6">
+      <header className="flex shrink-0 flex-col gap-1 py-4 sm:py-0 sm:pb-4">
         <p className="text-sm font-medium text-gray-500">習慣PL — オンボーディング</p>
         <p className="text-xs text-gray-400">
           理想の状態から、記録する習慣を一緒に考えます。
         </p>
       </header>
 
-      <div className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4">
+      <div
+        ref={scrollAreaRef}
+        className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto rounded-lg border border-gray-200 bg-white p-4"
+      >
         {history
           .filter((m) => m !== SEED_MESSAGE)
           .map((m, i) => (
@@ -148,55 +152,57 @@ export function OnboardingChat() {
         <div ref={bottomRef} />
       </div>
 
-      {proposal && (
-        <div className="flex flex-col gap-3 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
-          <p className="text-sm font-medium text-emerald-800">
-            この内容で保存しますか？
-          </p>
-          <ul className="flex flex-col gap-1 text-xs text-emerald-900">
-            {proposal.segments.map((s) => (
-              <li key={s.name}>
-                <span className="font-semibold">{s.name}</span>:{" "}
-                {proposal.accounts
-                  .filter((a) => a.segment_name === s.name)
-                  .map((a) => a.name)
-                  .join("、") || "（科目なし）"}
-              </li>
-            ))}
-          </ul>
+      <div className="sticky bottom-0 shrink-0 flex flex-col gap-3 bg-gray-50 pt-3 pb-4 sm:pb-6">
+        {proposal && (
+          <div className="flex flex-col gap-3 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+            <p className="text-sm font-medium text-emerald-800">
+              この内容で保存しますか？
+            </p>
+            <ul className="flex flex-col gap-1 text-xs text-emerald-900">
+              {proposal.segments.map((s) => (
+                <li key={s.name}>
+                  <span className="font-semibold">{s.name}</span>:{" "}
+                  {proposal.accounts
+                    .filter((a) => a.segment_name === s.name)
+                    .map((a) => a.name)
+                    .join("、") || "（科目なし）"}
+                </li>
+              ))}
+            </ul>
+            <button
+              type="button"
+              onClick={confirmProposal}
+              disabled={saved}
+              className="rounded-md bg-emerald-700 px-3 py-2 text-sm font-medium text-white disabled:opacity-40"
+            >
+              {saved ? "保存しました" : "この内容で保存する"}
+            </button>
+          </div>
+        )}
+
+        <div className="flex gap-2">
+          <input
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+            placeholder="メッセージを入力"
+            value={input}
+            disabled={loading}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                void send();
+              }
+            }}
+          />
           <button
             type="button"
-            onClick={confirmProposal}
-            disabled={saved}
-            className="rounded-md bg-emerald-700 px-3 py-2 text-sm font-medium text-white disabled:opacity-40"
+            onClick={() => void send()}
+            disabled={loading || !input.trim()}
+            className="shrink-0 rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
           >
-            {saved ? "保存しました" : "この内容で保存する"}
+            送信
           </button>
         </div>
-      )}
-
-      <div className="flex gap-2">
-        <input
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
-          placeholder="メッセージを入力"
-          value={input}
-          disabled={loading}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              void send();
-            }
-          }}
-        />
-        <button
-          type="button"
-          onClick={() => void send()}
-          disabled={loading || !input.trim()}
-          className="shrink-0 rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
-        >
-          送信
-        </button>
       </div>
     </div>
   );
