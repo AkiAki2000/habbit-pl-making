@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import * as api from "@/lib/api-client";
 import { DailyEntry } from "@/components/daily-entry";
 import { HabitSettings } from "@/components/habit-settings";
 import { HistoryList } from "@/components/history-list";
@@ -9,22 +10,22 @@ import { PeriodReport } from "@/components/period-report";
 import { StatTile } from "@/components/stat-tile";
 import {
   DEFAULT_SEGMENTS,
-  type AppState,
   type EvaluationAmounts,
   type EvaluationKey,
   type Habit,
   type HabitRecord,
   type Segment,
-  generateId,
   getEntryQueue,
-  loadState,
-  saveConfirmedDates,
-  saveHabits,
-  saveRecords,
-  saveSegments,
   startOfWeek,
   todayString,
 } from "@/lib/habit-pl";
+
+// Habit name/amount edits fire on every keystroke (see AmountInput's
+// commit-on-valid behavior in habit-settings.tsx), so sending a PATCH per
+// keystroke would spam the network and risks out-of-order writes clobbering
+// a later edit with an earlier one. Edits apply to local state immediately;
+// the actual write is debounced and coalesced per habit.
+const HABIT_UPDATE_DEBOUNCE_MS = 500;
 
 export default function Home() {
   const [habits, setHabits] = useState<Habit[]>([]);
@@ -33,36 +34,26 @@ export default function Home() {
   const [startDate, setStartDate] = useState(todayString());
   const [segments, setSegments] = useState<Segment[]>(DEFAULT_SEGMENTS);
   const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Reads localStorage once after mount: rendering the default state first
-  // (matching SSR output) avoids a hydration mismatch on the browser-only value.
+  const pendingHabitUpdates = useRef(
+    new Map<string, Partial<Pick<Habit, "name" | "segment" | "amounts">>>(),
+  );
+  const habitUpdateTimers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
+
   useEffect(() => {
-    /* eslint-disable react-hooks/set-state-in-effect */
-    const stored: AppState = loadState();
-    setHabits(stored.habits);
-    setRecords(stored.records);
-    setConfirmedDates(stored.confirmedDates);
-    setStartDate(stored.startDate);
-    setSegments(stored.segments);
-    setLoaded(true);
-    /* eslint-enable react-hooks/set-state-in-effect */
+    api
+      .fetchState()
+      .then((stored) => {
+        setHabits(stored.habits);
+        setRecords(stored.records);
+        setConfirmedDates(stored.confirmedDates);
+        setStartDate(stored.startDate);
+        setSegments(stored.segments);
+        setLoaded(true);
+      })
+      .catch((e: Error) => setError(e.message));
   }, []);
-
-  useEffect(() => {
-    if (loaded) saveHabits(habits);
-  }, [habits, loaded]);
-
-  useEffect(() => {
-    if (loaded) saveRecords(records);
-  }, [records, loaded]);
-
-  useEffect(() => {
-    if (loaded) saveConfirmedDates(confirmedDates);
-  }, [confirmedDates, loaded]);
-
-  useEffect(() => {
-    if (loaded) saveSegments(segments);
-  }, [segments, loaded]);
 
   const today = todayString();
   const weekStart = startOfWeek(today);
@@ -83,21 +74,26 @@ export default function Home() {
   const recordForActiveDate = (habitId: string, evaluation: EvaluationKey) => {
     const habit = habits.find((h) => h.id === habitId);
     if (!habit) return;
-    setRecords((prev) => {
-      const withoutDate = prev.filter(
-        (r) => !(r.habitId === habitId && r.date === activeDate),
-      );
-      return [
-        ...withoutDate,
-        {
-          id: generateId(),
-          habitId,
-          date: activeDate,
-          evaluation,
-          amount: habit.amounts[evaluation],
-        },
-      ];
-    });
+    const optimistic: HabitRecord = {
+      id: `pending-${habitId}-${activeDate}`,
+      habitId,
+      date: activeDate,
+      evaluation,
+      amount: habit.amounts[evaluation],
+    };
+    setRecords((prev) => [
+      ...prev.filter((r) => !(r.habitId === habitId && r.date === activeDate)),
+      optimistic,
+    ]);
+    api
+      .recordEntry(habitId, activeDate, evaluation)
+      .then((record) => {
+        setRecords((prev) => [
+          ...prev.filter((r) => !(r.habitId === habitId && r.date === activeDate)),
+          record,
+        ]);
+      })
+      .catch((e: Error) => setError(e.message));
   };
 
   const addHabit = (
@@ -105,35 +101,58 @@ export default function Home() {
     segment: Segment,
     amounts: EvaluationAmounts,
   ) => {
-    setHabits((prev) => [
-      ...prev,
-      { id: generateId(), name, segment, amounts },
-    ]);
+    api
+      .createHabit(name, segment, amounts)
+      .then((habit) => setHabits((prev) => [...prev, habit]))
+      .catch((e: Error) => setError(e.message));
   };
 
-  const updateHabit = (
+  const flushHabitUpdate = (habitId: string) => {
+    const updates = pendingHabitUpdates.current.get(habitId);
+    habitUpdateTimers.current.delete(habitId);
+    pendingHabitUpdates.current.delete(habitId);
+    if (!updates) return;
+    api.updateHabit(habitId, updates).catch((e: Error) => setError(e.message));
+  };
+
+  const updateHabitField = (
     habitId: string,
     updates: Partial<Pick<Habit, "name" | "segment" | "amounts">>,
   ) => {
     setHabits((prev) =>
       prev.map((h) => (h.id === habitId ? { ...h, ...updates } : h)),
     );
+
+    pendingHabitUpdates.current.set(habitId, {
+      ...pendingHabitUpdates.current.get(habitId),
+      ...updates,
+    });
+    const existingTimer = habitUpdateTimers.current.get(habitId);
+    if (existingTimer) clearTimeout(existingTimer);
+    habitUpdateTimers.current.set(
+      habitId,
+      setTimeout(() => flushHabitUpdate(habitId), HABIT_UPDATE_DEBOUNCE_MS),
+    );
   };
 
   const deleteHabit = (habitId: string) => {
     setHabits((prev) => prev.filter((h) => h.id !== habitId));
+    api.deleteHabit(habitId).catch((e: Error) => setError(e.message));
   };
 
   const addSegment = (segment: Segment) => {
     setSegments((prev) => (prev.includes(segment) ? prev : [...prev, segment]));
+    api.createSegment(segment).catch((e: Error) => setError(e.message));
   };
 
   const confirmDay = (date: string) => {
     setConfirmedDates((prev) => (prev.includes(date) ? prev : [...prev, date]));
+    api.confirmDate(date).catch((e: Error) => setError(e.message));
   };
 
   const unconfirmDay = (date: string) => {
     setConfirmedDates((prev) => prev.filter((d) => d !== date));
+    api.unconfirmDate(date).catch((e: Error) => setError(e.message));
   };
 
   return (
@@ -149,39 +168,51 @@ export default function Home() {
           </Link>
         </header>
 
-        <section className="grid grid-cols-2 gap-3">
-          <StatTile
-            label="週次損益"
-            amount={weeklyTotal}
-            sub={`${weekStart} 〜 ${today}`}
-          />
-          <StatTile label="累計損益" amount={cumulativeTotal} />
-        </section>
+        {error && (
+          <p className="rounded-md bg-red-50 px-3 py-2 text-xs text-red-600">
+            {error}
+          </p>
+        )}
 
-        <DailyEntry
-          habits={habits}
-          records={records}
-          targetDate={activeDate}
-          isToday={activeDate === today}
-          backlogCount={backlogCount}
-          isConfirmed={confirmedDates.includes(activeDate)}
-          onRecord={recordForActiveDate}
-          onConfirm={() => confirmDay(activeDate)}
-          onUnconfirm={() => unconfirmDay(activeDate)}
-        />
+        {!loaded && !error ? (
+          <p className="py-12 text-center text-sm text-gray-400">読み込み中…</p>
+        ) : (
+          <>
+            <section className="grid grid-cols-2 gap-3">
+              <StatTile
+                label="週次損益"
+                amount={weeklyTotal}
+                sub={`${weekStart} 〜 ${today}`}
+              />
+              <StatTile label="累計損益" amount={cumulativeTotal} />
+            </section>
 
-        <PeriodReport habits={habits} records={records} segments={segments} />
+            <DailyEntry
+              habits={habits}
+              records={records}
+              targetDate={activeDate}
+              isToday={activeDate === today}
+              backlogCount={backlogCount}
+              isConfirmed={confirmedDates.includes(activeDate)}
+              onRecord={recordForActiveDate}
+              onConfirm={() => confirmDay(activeDate)}
+              onUnconfirm={() => unconfirmDay(activeDate)}
+            />
 
-        <HistoryList records={records} habits={habits} />
+            <PeriodReport habits={habits} records={records} segments={segments} />
 
-        <HabitSettings
-          habits={habits}
-          segments={segments}
-          onAdd={addHabit}
-          onUpdate={updateHabit}
-          onDelete={deleteHabit}
-          onAddSegment={addSegment}
-        />
+            <HistoryList records={records} habits={habits} />
+
+            <HabitSettings
+              habits={habits}
+              segments={segments}
+              onAdd={addHabit}
+              onUpdate={updateHabitField}
+              onDelete={deleteHabit}
+              onAddSegment={addSegment}
+            />
+          </>
+        )}
       </main>
     </div>
   );

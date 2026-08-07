@@ -18,17 +18,42 @@
   損益と達成率を確認できる期間レポート（達成率は「該当なし」を除いて計算）
 - 記録した日付ごとの履歴を一覧表示（科目・評価・金額）
 - AIとの対話で習慣を設計するオンボーディング機能（画面右上「AIと一緒に設計する」）。
-  いきなり続けたい/やめたい習慣を聞くのではなく、まず「仕事・家庭・お金・プライベート」
-  それぞれの理想の状態を聞き、現状とのギャップを整理し、そこから日々の行動・評価基準・
-  換算金額を自然な対話の中で導き出し、最後に一覧確認のうえでセグメント・科目として保存する
+  いきなり続けたい/やめたい習慣を聞くのではなく、まず属性（社会人/学生など）に応じた
+  4つの軸それぞれの理想の状態を深掘りしながら聞き、現状とのギャップを整理し、そこから
+  日々の行動・評価基準・換算金額を自然な対話の中で導き出す。対話は自動保存され、途中で
+  閉じても次回開いたときに続きから再開できる。最後に内容を一覧・編集できる確認画面を
+  経てから、明示的に「確定」した内容だけがデータベースに保存される
 
-データはブラウザのローカルストレージにのみ保存されます（サーバー・DBなし）。
-以前の単一科目版のデータがある場合は、初回起動時に自動で移行されます。
+データは PostgreSQL データベースに保存されます（ブラウザ・端末を問わずアクセス可能）。
+認証機能はなく、1人で使う前提のシンプルな構成です。
+
+### データベースのセットアップ（必須）
+
+このアプリは Postgres 接続文字列（`DATABASE_URL`）を必要とします。無料で使える
+[Supabase](https://supabase.com/) の Postgres を使う想定ですが、通常の Postgres
+接続文字列を話すだけなので、他の Postgres ホスティング（Neon など）でも動きます。
+
+1. Supabase でプロジェクトを作成する
+2. プロジェクトの **Settings → Database → Connection string**（URI 形式、
+   ポート5432の直接接続、または6543のTransaction pooler）をコピーする
+3. `db/schema.sql` を、SupabaseダッシュボードのSQL Editor に貼り付けて実行するか、
+   もしくは `psql "$DATABASE_URL" -f db/schema.sql` で流し込む
+4. リポジトリ直下に `.env.local` を作成し、以下を設定する
+
+   ```
+   DATABASE_URL=postgres://...（Supabaseからコピーした接続文字列）
+   ```
+
+5. 開発サーバーを再起動する
+
+初回アクセス時、テーブルが空であれば自動的に初期科目（睡眠/トレーニング・運動/深酒/
+たばこ）が投入されます。`DATABASE_URL` が未設定の場合、画面にエラーメッセージが
+表示されます。
 
 ### オンボーディング機能のセットアップ
 
 このオンボーディング対話は Anthropic API (Claude) を呼び出すサーバー機能です。
-利用するには、リポジトリ直下に `.env.local` を作成し、以下を設定してください。
+`.env.local` に以下も追加してください。
 
 ```
 ANTHROPIC_API_KEY=sk-ant-...
@@ -44,12 +69,17 @@ npm install
 npm run dev
 ```
 
-[http://localhost:3000](http://localhost:3000) を開いてください。
+[http://localhost:3000](http://localhost:3000) を開いてください（`DATABASE_URL` の
+設定が必要です。上記セットアップ参照）。
 
 ## 技術構成
 
 - Next.js (App Router) + TypeScript
 - Tailwind CSS
-- 状態保存: localStorage
+- 状態保存: PostgreSQL（`postgres` パッケージ経由、Route Handler 内で直接クエリ）。
+  スキーマは `db/schema.sql`（segments/accounts/weight_rules/entries/settlements/
+  app_settings/onboarding_sessions）
 - オンボーディング機能: `@anthropic-ai/sdk`（Claude Opus 5）を使ったサーバー側
-  Route Handler（`src/app/api/onboarding/route.ts`）
+  Route Handler（`src/app/api/onboarding/route.ts`）。出力JSONは `zod` でバリデーション
+  し、不正な場合はAPI呼び出し失敗時のリトライとは別に、モデル自身へ一度だけ自動修正を
+  依頼する

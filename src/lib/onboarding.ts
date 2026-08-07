@@ -1,41 +1,42 @@
-import {
-  DEFAULT_AMOUNTS,
-  generateId,
-  type Habit,
-} from "@/lib/habit-pl";
+import { z } from "zod";
 
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
 }
 
-export interface OnboardingSegment {
-  name: string;
-}
+export const OnboardingSegmentSchema = z.object({
+  name: z.string().min(1),
+});
 
-export interface OnboardingAccount {
-  segment_name: string;
-  name: string;
-  type: "revenue" | "expense";
-  frequency: "daily" | "weekly" | "monthly";
-  criteria_achieved: string;
-  criteria_missed: string;
-  criteria_badly_missed: string;
-}
+export const OnboardingAccountSchema = z.object({
+  segment_name: z.string().min(1),
+  name: z.string().min(1),
+  type: z.enum(["revenue", "expense"]),
+  frequency: z.enum(["daily", "weekly", "monthly"]),
+  criteria_achieved: z.string().min(1),
+  criteria_missed: z.string().min(1),
+  criteria_badly_missed: z.string().min(1),
+});
 
-export interface OnboardingWeightRule {
-  account_name: string;
-  amount_achieved: number;
-  amount_missed: number;
-  amount_badly_missed: number;
-  change_reason: null;
-}
+export const OnboardingWeightRuleSchema = z.object({
+  account_name: z.string().min(1),
+  amount_achieved: z.number(),
+  amount_missed: z.number(),
+  amount_badly_missed: z.number(),
+  change_reason: z.string().nullable().optional().default(null),
+});
 
-export interface OnboardingProposal {
-  segments: OnboardingSegment[];
-  accounts: OnboardingAccount[];
-  weight_rules: OnboardingWeightRule[];
-}
+export const OnboardingProposalSchema = z.object({
+  segments: z.array(OnboardingSegmentSchema).min(1),
+  accounts: z.array(OnboardingAccountSchema).min(1),
+  weight_rules: z.array(OnboardingWeightRuleSchema).min(1),
+});
+
+export type OnboardingSegment = z.infer<typeof OnboardingSegmentSchema>;
+export type OnboardingAccount = z.infer<typeof OnboardingAccountSchema>;
+export type OnboardingWeightRule = z.infer<typeof OnboardingWeightRuleSchema>;
+export type OnboardingProposal = z.infer<typeof OnboardingProposalSchema>;
 
 const JSON_BLOCK_RE = /```habit-pl-json\s*([\s\S]*?)```/;
 
@@ -102,9 +103,11 @@ export const ONBOARDING_SYSTEM_PROMPT = `あなたは「習慣PL」というア�
   いきますがどうですか？」と、人が読める文章で見せて確認する。JSONやテーブルの生データを
   いきなり見せない。
 - フェーズ5（評価基準・換算金額）: 「これができた日とできなかった日で、感覚的にどれくらい
-  差がありますか？」のように自然な会話のトーンで、各科目の3段階評価（達成/未達/大きく未達）の
-  基準と換算金額を聞き出す。質問リストのようには見せない。著しく緩い基準（一般的な目安から
-  大きく乖離する金額など）が出た場合はやんわり指摘するが、本人が「それでいい」と言えば採用する。
+  差がありますか？」のように自然な会話のトーンで、各科目の3段階評価（達成/該当なし/未達）の
+  基準と換算金額を聞き出す。「該当なし」は、その日その習慣が発生しない・対象にならない日
+  （例: 予定通りの休養日など）を指し、基本は0円だが、必要なら金額を変えてよい。質問リストの
+  ようには見せない。著しく緩い基準（一般的な目安から大きく乖離する金額など）が出た場合は
+  やんわり指摘するが、本人が「それでいい」と言えば採用する。
 - フェーズ6（確定）: 全体を一覧で見せ、確定してよいか尋ねる。
 
 ## トーン・原則
@@ -114,6 +117,19 @@ export const ONBOARDING_SYSTEM_PROMPT = `あなたは「習慣PL」というア�
 - 相手の言葉をまず受け止めてから、次を促す。
 - 特定のAIブランド名は名乗らない。
 - 短い相槌だけで終わらせず、必ず次に進むための一言を添える。
+
+## 異常系（対話が破綻しないために）
+
+- ユーザーが「特にない」「別にない」のような極端に短い返答を繰り返す場合、無理に深掘りを
+  重ねず、いったんそのステップを打ち切って次に進む。ただし、直後のステップでも同様に短い
+  返答が続く軸については、深掘りの目安回数にこだわらず、現時点でわかっている情報だけで
+  その軸を簡潔にまとめてよい（軸全体を1〜2往復で終えても構わない）。
+- ユーザーの返答が、直前に聞いたことと噛み合っていない場合（例: 行動を尋ねたのに理想の話に
+  戻る、全く関係ない話題に飛ぶ）は、指摘したり繰り返し問い詰めたりせず、「なるほど、そちら
+  も気になる点ですね。ひとまず先ほどの◯◯について伺ってもいいですか？」のように、一度受け
+  止めた上でやさしく元の話題に戻す。それでも噛み合わない場合は、無理に元の質問に固執せず、
+  ユーザーが今話したい内容を起点に会話を組み立て直してよい。
+- ユーザーが話題を大きく変えたい、後戻りしたい、と明示した場合はそれに従う。
 
 ## 出力形式（重要）
 
@@ -133,9 +149,9 @@ export const ONBOARDING_SYSTEM_PROMPT = `あなたは「習慣PL」というア�
     "name": "string",
     "type": "revenue または expense",
     "frequency": "daily, weekly, monthly のいずれか",
-    "criteria_achieved": "string",
-    "criteria_missed": "string",
-    "criteria_badly_missed": "string"
+    "criteria_achieved": "string（達成の基準）",
+    "criteria_missed": "string（該当なし＝その日は対象にならない基準。例: 休養日など）",
+    "criteria_badly_missed": "string（未達の基準）"
   }],
   "weight_rules": [{
     "account_name": "string（対応するaccountsのnameと一致させる）",
@@ -147,88 +163,57 @@ export const ONBOARDING_SYSTEM_PROMPT = `あなたは「習慣PL」というア�
 }
 \`\`\`
 
+（"criteria_missed" と "amount_missed" は、いずれも3段階評価の「該当なし」に対応します。
+"amount_missed" は基本0のことが多いですが、フェーズ5でユーザーが別の金額を望んだ場合はその値を使ってください。）
+
 このJSONブロックは、ユーザーがまだ内容の変更を求めていない限り、要約を見せるメッセージの
 最後に必ず含めてください（保存の実行自体は別のUI操作で行われるため、出力すること自体に
 確認は不要です）。ユーザーが後から内容の修正を求めた場合は、修正後の内容で要約とJSONブロックを
 再度出力してください。まだフェーズ1〜5の途中では、このJSONブロックを出力しないでください。`;
 
-/** Extracts the \`\`\`habit-pl-json fenced block from the latest assistant message, if present. */
-export function extractProposal(text: string): OnboardingProposal | null {
+/** The raw fenced JSON text, if the message contains a habit-pl-json block. */
+function extractProposalBlockText(text: string): string | null {
   const match = text.match(JSON_BLOCK_RE);
-  if (!match) return null;
+  return match ? match[1] : null;
+}
+
+export interface ProposalValidation {
+  proposal: OnboardingProposal | null;
+  /** Present (and `proposal` null) when a JSON block existed but failed validation — used to drive the self-repair retry. */
+  error?: string;
+}
+
+/**
+ * Extracts and validates the \`\`\`habit-pl-json fenced block from an
+ * assistant message. Distinguishes "no block yet" (still mid-conversation,
+ * `proposal: null`, no `error`) from "block present but malformed"
+ * (`proposal: null` with `error` describing what's wrong, e.g. for an
+ * automatic model self-repair retry) from "valid" (`proposal` populated).
+ */
+export function validateProposal(text: string): ProposalValidation {
+  const raw = extractProposalBlockText(text);
+  if (raw === null) return { proposal: null };
+
+  let json: unknown;
   try {
-    const parsed = JSON.parse(match[1]) as OnboardingProposal;
-    if (!Array.isArray(parsed.segments) || !Array.isArray(parsed.accounts)) {
-      return null;
-    }
-    return parsed;
-  } catch {
-    return null;
+    json = JSON.parse(raw);
+  } catch (e) {
+    return { proposal: null, error: `JSONとして解析できませんでした: ${(e as Error).message}` };
   }
+
+  const result = OnboardingProposalSchema.safeParse(json);
+  if (!result.success) {
+    return { proposal: null, error: result.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ") };
+  }
+  return { proposal: result.data };
+}
+
+/** Convenience wrapper for call sites that only care whether a valid proposal is present. */
+export function extractProposal(text: string): OnboardingProposal | null {
+  return validateProposal(text).proposal;
 }
 
 /** The assistant's message with the JSON fence removed, for display in the chat log. */
 export function stripProposalBlock(text: string): string {
   return text.replace(JSON_BLOCK_RE, "").trim();
-}
-
-function buildNote(account: OnboardingAccount): string | undefined {
-  const parts = [
-    account.criteria_achieved && `達成: ${account.criteria_achieved}`,
-    account.criteria_missed && `未達: ${account.criteria_missed}`,
-    account.criteria_badly_missed && `大きく未達: ${account.criteria_badly_missed}`,
-  ].filter(Boolean);
-  return parts.length > 0 ? parts.join(" / ") : undefined;
-}
-
-/**
- * Converts a confirmed onboarding proposal into habits this app can actually
- * record against. The proposal's evaluation tiers (achieved/missed/badly
- * missed) predate this app's current 3-tier design (achieved/not-applicable/
- * not-achieved), so amounts collapse: `amount_badly_missed` becomes the
- * habit's single "notAchieved" penalty (matching how this app already
- * treats notAchieved as the real failure case), and the finer-grained
- * criteria text is preserved as a note rather than a separate amount.
- */
-export function proposalToHabits(proposal: OnboardingProposal): Habit[] {
-  const ruleByAccount = new Map(
-    proposal.weight_rules.map((r) => [r.account_name, r]),
-  );
-  return proposal.accounts.map((account) => {
-    const rule = ruleByAccount.get(account.name);
-    return {
-      id: generateId(),
-      name: account.name,
-      segment: account.segment_name,
-      amounts: {
-        achieved: rule?.amount_achieved ?? DEFAULT_AMOUNTS.achieved,
-        notApplicable: DEFAULT_AMOUNTS.notApplicable,
-        notAchieved:
-          rule?.amount_badly_missed ??
-          rule?.amount_missed ??
-          DEFAULT_AMOUNTS.notAchieved,
-      },
-      note: buildNote(account),
-    };
-  });
-}
-
-const EXPORT_SEGMENTS_KEY = "habit-pl:export-segments";
-const EXPORT_ACCOUNTS_KEY = "habit-pl:export-accounts";
-const EXPORT_WEIGHT_RULES_KEY = "habit-pl:export-weight_rules";
-
-/**
- * Persists the proposal in the exact shape requested for the segments/
- * accounts/weight_rules tables. This app has no backing database, so this
- * is stored as a browser-local export record — the closest available
- * approximation of "save directly to those tables" — kept separate from
- * the app's own habit list (which uses `proposalToHabits` instead).
- */
-export function saveOnboardingExport(proposal: OnboardingProposal): void {
-  window.localStorage.setItem(EXPORT_SEGMENTS_KEY, JSON.stringify(proposal.segments));
-  window.localStorage.setItem(EXPORT_ACCOUNTS_KEY, JSON.stringify(proposal.accounts));
-  window.localStorage.setItem(
-    EXPORT_WEIGHT_RULES_KEY,
-    JSON.stringify(proposal.weight_rules),
-  );
 }
