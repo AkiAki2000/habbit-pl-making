@@ -14,6 +14,13 @@ import type { OnboardingAccount, OnboardingProposal } from "@/lib/onboarding";
 
 const DEFAULT_HABIT_NAMES = ["睡眠", "トレーニング・運動", "深酒", "たばこ"];
 
+// There's no auth yet — the app is single-user — but every table carries a
+// user_id (see db/schema.sql) defaulting to the same constant everywhere,
+// so multi-user support later is a query change, not a schema migration.
+// Queries below don't filter by it explicitly: with a single user_id value
+// in play, every row already belongs to "the" user, so the column earns its
+// keep once real per-request user ids exist rather than before.
+
 /**
  * The app's own evaluation tiers (達成/該当なし/未達) map 1:1 onto the
  * weight_rules table's 3 amount columns, which keep the names from the
@@ -62,6 +69,46 @@ function buildNote(row: {
   return parts.length > 0 ? (parts.join(" / ") as string) : undefined;
 }
 
+/** The latest (current) weight_rules row for an account — never the only one, since the table is append-only. */
+async function getCurrentWeightRule(accountId: string): Promise<{
+  id: string;
+  amount_achieved: number;
+  amount_missed: number;
+  amount_badly_missed: number;
+} | null> {
+  const [rule] = await sql<
+    { id: string; amount_achieved: number; amount_missed: number; amount_badly_missed: number }[]
+  >`
+    select id, amount_achieved, amount_missed, amount_badly_missed
+    from weight_rules
+    where account_id = ${accountId}
+    order by effective_from desc
+    limit 1
+  `;
+  return rule ?? null;
+}
+
+/** Inserts a new weight_rules row (the table is append-only — see db/schema.sql), carrying the prior row's amounts as the "before" values for the audit trail. */
+async function insertWeightRule(
+  accountId: string,
+  amounts: EvaluationAmounts,
+  changeReason: string | null = null,
+): Promise<void> {
+  const previous = await getCurrentWeightRule(accountId);
+  await sql`
+    insert into weight_rules (
+      account_id, amount_achieved, amount_missed, amount_badly_missed,
+      previous_amount_achieved, previous_amount_missed, previous_amount_badly_missed,
+      change_reason
+    )
+    values (
+      ${accountId}, ${amounts.achieved}, ${amounts.notApplicable}, ${amounts.notAchieved},
+      ${previous?.amount_achieved ?? null}, ${previous?.amount_missed ?? null}, ${previous?.amount_badly_missed ?? null},
+      ${changeReason}
+    )
+  `;
+}
+
 /** Seeds a brand-new (empty) database with the same starting point the old localStorage version shipped with. */
 async function seedIfEmpty(): Promise<void> {
   const [{ count }] = await sql<{ count: string }[]>`select count(*)::int as count from segments`;
@@ -89,7 +136,7 @@ async function seedIfEmpty(): Promise<void> {
     const today = todayString();
     await tx`
       insert into app_settings (key, value) values ('start_date', ${JSON.stringify(today)}::jsonb)
-      on conflict (key) do nothing
+      on conflict (user_id, key) do nothing
     `;
   });
 }
@@ -100,7 +147,7 @@ async function getStartDate(): Promise<string> {
   const today = todayString();
   await sql`
     insert into app_settings (key, value) values ('start_date', ${JSON.stringify(today)}::jsonb)
-    on conflict (key) do nothing
+    on conflict (user_id, key) do nothing
   `;
   return today;
 }
@@ -131,7 +178,13 @@ export async function getFullState(): Promise<AppState> {
            a.criteria_achieved, a.criteria_missed, a.criteria_badly_missed,
            w.amount_achieved, w.amount_missed, w.amount_badly_missed
     from accounts a
-    join weight_rules w on w.account_id = a.id
+    join lateral (
+      select amount_achieved, amount_missed, amount_badly_missed
+      from weight_rules
+      where account_id = a.id
+      order by effective_from desc
+      limit 1
+    ) w on true
     order by a.created_at asc
   `;
 
@@ -154,8 +207,8 @@ export async function getFullState(): Promise<AppState> {
     amount: e.amount,
   }));
 
-  const settlementRows = await sql<{ date: string }[]>`select date::text as date from settlements`;
-  const confirmedDates = settlementRows.map((s) => s.date);
+  const lockRows = await sql<{ date: string }[]>`select date::text as date from daily_locks`;
+  const confirmedDates = lockRows.map((s) => s.date);
 
   const startDate = await getStartDate();
 
@@ -163,7 +216,7 @@ export async function getFullState(): Promise<AppState> {
 }
 
 export async function createSegment(name: string): Promise<void> {
-  await sql`insert into segments (name) values (${name}) on conflict (name) do nothing`;
+  await sql`insert into segments (name) values (${name}) on conflict (user_id, name) do nothing`;
 }
 
 async function getOrCreateSegmentId(name: string): Promise<string> {
@@ -184,10 +237,7 @@ export async function createHabit(
   const [account] = await sql<{ id: string }[]>`
     insert into accounts (segment_id, name) values (${segmentId}, ${name}) returning id
   `;
-  await sql`
-    insert into weight_rules (account_id, amount_achieved, amount_missed, amount_badly_missed)
-    values (${account.id}, ${amounts.achieved}, ${amounts.notApplicable}, ${amounts.notAchieved})
-  `;
+  await insertWeightRule(account.id, amounts);
   return { id: account.id, name, segment, amounts };
 }
 
@@ -203,12 +253,9 @@ export async function updateHabit(
     await sql`update accounts set segment_id = ${segmentId} where id = ${habitId}`;
   }
   if (updates.amounts !== undefined) {
-    const a = updates.amounts;
-    await sql`
-      update weight_rules
-      set amount_achieved = ${a.achieved}, amount_missed = ${a.notApplicable}, amount_badly_missed = ${a.notAchieved}, updated_at = now()
-      where account_id = ${habitId}
-    `;
+    // weight_rules is append-only (see db/schema.sql): an amount change
+    // inserts a new history row rather than mutating the existing one.
+    await insertWeightRule(habitId, updates.amounts);
   }
 }
 
@@ -216,15 +263,13 @@ export async function deleteHabit(habitId: string): Promise<void> {
   await sql`delete from accounts where id = ${habitId}`;
 }
 
-/** Records (or overwrites) one day's evaluation for a habit, freezing the amount from that habit's current weight_rule. */
+/** Records (or overwrites) one day's evaluation for a habit, freezing the amount from — and linking to — that habit's current weight_rule. */
 export async function recordEntry(
   habitId: string,
   date: string,
   evaluation: EvaluationKey,
 ): Promise<HabitRecord> {
-  const [rule] = await sql<
-    { amount_achieved: number; amount_missed: number; amount_badly_missed: number }[]
-  >`select amount_achieved, amount_missed, amount_badly_missed from weight_rules where account_id = ${habitId}`;
+  const rule = await getCurrentWeightRule(habitId);
   if (!rule) throw new Error("habit not found");
 
   const amounts = amountsFromRow(rule);
@@ -232,20 +277,21 @@ export async function recordEntry(
   const dbEvaluation = evaluationToDb(evaluation);
 
   const [row] = await sql<{ id: string }[]>`
-    insert into entries (account_id, date, evaluation, amount)
-    values (${habitId}, ${date}, ${dbEvaluation}, ${amount})
-    on conflict (account_id, date) do update set evaluation = excluded.evaluation, amount = excluded.amount
+    insert into entries (account_id, weight_rule_id, date, evaluation, amount)
+    values (${habitId}, ${rule.id}, ${date}, ${dbEvaluation}, ${amount})
+    on conflict (account_id, date) do update
+      set evaluation = excluded.evaluation, amount = excluded.amount, weight_rule_id = excluded.weight_rule_id
     returning id
   `;
   return { id: row.id, habitId, date, evaluation, amount };
 }
 
 export async function confirmDate(date: string): Promise<void> {
-  await sql`insert into settlements (date) values (${date}) on conflict (date) do nothing`;
+  await sql`insert into daily_locks (date) values (${date}) on conflict (user_id, date) do nothing`;
 }
 
 export async function unconfirmDate(date: string): Promise<void> {
-  await sql`delete from settlements where date = ${date}`;
+  await sql`delete from daily_locks where date = ${date}`;
 }
 
 // --- Onboarding session persistence (resume-on-reopen) ---------------------
@@ -329,6 +375,8 @@ export async function confirmOnboardingProposal(
         values (${segmentId}, ${account.name}, ${account.type}, ${account.frequency}, ${account.criteria_achieved}, ${account.criteria_missed}, ${account.criteria_badly_missed})
         returning id
       `;
+      // First weight_rules row for a brand-new account: no prior rule, so
+      // there's nothing to carry into previous_amount_* (left null).
       await tx`
         insert into weight_rules (account_id, amount_achieved, amount_missed, amount_badly_missed, change_reason)
         values (
