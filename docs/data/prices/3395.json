@@ -1,1 +1,902 @@
-[]
+[
+  {
+    "date": "2026-01-05",
+    "close": 2708.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-06",
+    "close": 2694.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-07",
+    "close": 2703.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-08",
+    "close": 2731.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-09",
+    "close": 2754.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-13",
+    "close": 2768.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-14",
+    "close": 2758.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-15",
+    "close": 2778.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-16",
+    "close": 2824.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-19",
+    "close": 2799.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-20",
+    "close": 2819.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-21",
+    "close": 2780.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-22",
+    "close": 2808.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-23",
+    "close": 2851.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-26",
+    "close": 2827.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-27",
+    "close": 2842.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-28",
+    "close": 2795.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-29",
+    "close": 2785.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-01-30",
+    "close": 2814.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-02",
+    "close": 2791.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-03",
+    "close": 2812.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-04",
+    "close": 2825.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-05",
+    "close": 2856.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-06",
+    "close": 2929.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-09",
+    "close": 2979.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-10",
+    "close": 3050.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-12",
+    "close": 3075.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-13",
+    "close": 3075.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-16",
+    "close": 3050.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-17",
+    "close": 3010.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-18",
+    "close": 3040.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-19",
+    "close": 3065.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-20",
+    "close": 3020.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-24",
+    "close": 3055.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-25",
+    "close": 3060.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-26",
+    "close": 3065.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-02-27",
+    "close": 3125.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-02",
+    "close": 3110.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-03",
+    "close": 3110.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-04",
+    "close": 3100.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-05",
+    "close": 3130.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-06",
+    "close": 3145.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-09",
+    "close": 3110.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-10",
+    "close": 3170.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-11",
+    "close": 3150.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-12",
+    "close": 3100.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-13",
+    "close": 3090.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-16",
+    "close": 3065.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-17",
+    "close": 3095.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-18",
+    "close": 3130.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-19",
+    "close": 3065.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-23",
+    "close": 3020.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-24",
+    "close": 3075.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-25",
+    "close": 3085.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-26",
+    "close": 3080.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-27",
+    "close": 3080.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-30",
+    "close": 2990.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-03-31",
+    "close": 2970.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-01",
+    "close": 3020.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-02",
+    "close": 3005.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-03",
+    "close": 2997.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-06",
+    "close": 2953.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-07",
+    "close": 2985.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-08",
+    "close": 2990.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-09",
+    "close": 2933.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-10",
+    "close": 2905.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-13",
+    "close": 2834.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-14",
+    "close": 2771.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-15",
+    "close": 2801.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-16",
+    "close": 2782.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-17",
+    "close": 2740.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-20",
+    "close": 2730.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-21",
+    "close": 2681.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-22",
+    "close": 2670.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-23",
+    "close": 2666.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-24",
+    "close": 2633.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-27",
+    "close": 2662.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-28",
+    "close": 2700.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-04-30",
+    "close": 2687.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-01",
+    "close": 2673.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-07",
+    "close": 2650.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-08",
+    "close": 2609.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-11",
+    "close": 2630.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-12",
+    "close": 2611.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-13",
+    "close": 2609.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-14",
+    "close": 2626.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-15",
+    "close": 2625.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-18",
+    "close": 2570.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-19",
+    "close": 2643.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-20",
+    "close": 2636.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-21",
+    "close": 2604.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-22",
+    "close": 2621.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-25",
+    "close": 2564.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-26",
+    "close": 2529.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-27",
+    "close": 2529.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-28",
+    "close": 2498.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-05-29",
+    "close": 2550.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-01",
+    "close": 2464.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-02",
+    "close": 2461.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-03",
+    "close": 2437.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-04",
+    "close": 2414.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-05",
+    "close": 2411.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-08",
+    "close": 2438.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-09",
+    "close": 2390.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-10",
+    "close": 2438.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-11",
+    "close": 2439.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-12",
+    "close": 2432.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-15",
+    "close": 2440.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-16",
+    "close": 2414.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-17",
+    "close": 2407.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-18",
+    "close": 2423.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-19",
+    "close": 2450.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-22",
+    "close": 2454.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-23",
+    "close": 2442.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-24",
+    "close": 2453.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-25",
+    "close": 2464.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-26",
+    "close": 2483.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-29",
+    "close": 2540.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-06-30",
+    "close": 2511.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-01",
+    "close": 2476.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-02",
+    "close": 2511.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-03",
+    "close": 2535.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-06",
+    "close": 2559.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-07",
+    "close": 2580.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-08",
+    "close": 2590.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-09",
+    "close": 2562.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-10",
+    "close": 2532.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-13",
+    "close": 2540.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-14",
+    "close": 2539.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-15",
+    "close": 2550.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-16",
+    "close": 2550.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-17",
+    "close": 2569.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-21",
+    "close": 2567.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-22",
+    "close": 2554.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-23",
+    "close": 2541.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-24",
+    "close": 2548.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-27",
+    "close": 2593.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-28",
+    "close": 2611.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-29",
+    "close": 2668.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-30",
+    "close": 2644.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-07-31",
+    "close": 2565.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-08-03",
+    "close": 2493.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-08-04",
+    "close": 2462.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-08-05",
+    "close": 2458.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-08-06",
+    "close": 2344.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-08-07",
+    "close": 2350.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-08-10",
+    "close": 2375.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-08-12",
+    "close": 2401.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-08-13",
+    "close": 2411.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  },
+  {
+    "date": "2026-08-14",
+    "close": 2451.0,
+    "shares_outstanding": null,
+    "market_cap": null
+  }
+]
