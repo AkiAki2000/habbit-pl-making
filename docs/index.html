@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>外食チェーン株価トラッカー</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>外食チェーン株価トラッカー</h1>
+      <div class="subtitle">毎朝の株価・時価総額・IR（適時開示）記録</div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button">🌓 表示切替</button>
+  </header>
+  <div class="status-line" id="statusLine">読み込み中…</div>
+
+  <section class="card">
+    <h2>銘柄一覧</h2>
+    <div class="table-scroll">
+      <table id="overviewTable">
+        <thead>
+          <tr>
+            <th data-key="code">コード</th>
+            <th data-key="name">銘柄名</th>
+            <th data-key="brands">ブランド</th>
+            <th data-key="close">終値</th>
+            <th data-key="delta">前日比</th>
+            <th data-key="market_cap">時価総額</th>
+            <th data-key="date">更新日</th>
+          </tr>
+        </thead>
+        <tbody id="overviewBody"></tbody>
+      </table>
+    </div>
+    <footer class="note">行をクリックすると下の詳細セクションに表示されます。データは毎朝 GitHub Actions が自動取得します。</footer>
+  </section>
+
+  <div class="filter-row">
+    <label for="companySelect">銘柄</label>
+    <select id="companySelect"></select>
+    <div class="range-buttons" id="rangeButtons">
+      <button data-range="30">直近30日</button>
+      <button data-range="90">直近90日</button>
+      <button data-range="all" class="active">全期間</button>
+    </div>
+  </div>
+
+  <section class="card" id="detailSection">
+    <div class="stat-row" id="statRow"></div>
+
+    <p class="chart-title" id="priceChartTitle">株価推移</p>
+    <div class="chart-box" id="priceChartBox"></div>
+
+    <details class="table-toggle">
+      <summary>価格・時価総額データをテーブルで見る</summary>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>日付</th><th>終値</th><th>発行済株式数</th><th>時価総額</th></tr></thead>
+          <tbody id="priceTableBody"></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <section class="card">
+    <p class="chart-title" id="capChartTitle">時価総額推移</p>
+    <div class="chart-box" id="capChartBox"></div>
+  </section>
+
+  <section class="card">
+    <h2 id="irTitle">IR（適時開示）履歴</h2>
+    <ul class="ir-list" id="irList"></ul>
+    <footer class="note">IR記録は自動検知（株式数変化）＋手動登録（scripts/add_ir_event.py）で蓄積されます。</footer>
+  </section>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

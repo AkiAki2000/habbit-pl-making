@@ -1,0 +1,46 @@
+name: 株価バックフィル（手動実行）
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: "開始日 (YYYY-MM-DD)"
+        required: false
+        default: "2026-01-01"
+      code:
+        description: "証券コードを1社だけ指定する場合（空なら全社）"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Backfill prices
+        run: |
+          ARGS="--start ${{ github.event.inputs.start_date }}"
+          if [ -n "${{ github.event.inputs.code }}" ]; then
+            ARGS="$ARGS --code ${{ github.event.inputs.code }}"
+          fi
+          python scripts/backfill_prices.py $ARGS
+
+      - name: Commit and push backfilled data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "chore: backfill price history from ${{ github.event.inputs.start_date }}"
+          git push
