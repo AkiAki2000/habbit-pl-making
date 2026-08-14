@@ -95,6 +95,7 @@ def main():
                 "close": close,
                 "shares_outstanding": shares_for_calc,
                 "market_cap": market_cap,
+                "source": "daily_fetch",
             })
             save_price_history(code, history)
             updated.append(code)

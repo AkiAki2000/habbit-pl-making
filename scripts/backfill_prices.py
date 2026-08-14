@@ -39,11 +39,14 @@ def backfill_one(company, start, end):
             "close": close,
             "shares_outstanding": shares,
             "market_cap": market_cap,
+            "source": "backfill",
         }
         if shares:
             record["shares_estimated"] = True
-        # Don't clobber a real same-day record already written by fetch_prices.py.
-        if date_str in existing and not existing[date_str].get("shares_estimated"):
+        # Don't clobber a real same-day record already written by fetch_prices.py;
+        # do refresh rows we ourselves backfilled earlier (e.g. once shares_outstanding
+        # becomes known, so market_cap can be filled in on a re-run).
+        if date_str in existing and existing[date_str].get("source") == "daily_fetch":
             continue
         existing[date_str] = record
 
