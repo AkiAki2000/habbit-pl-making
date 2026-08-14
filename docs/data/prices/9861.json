@@ -895,8 +895,8 @@
   },
   {
     "date": "2026-08-14",
-    "close": NaN,
-    "shares_outstanding": null,
-    "market_cap": null
+    "close": 3779.0,
+    "shares_outstanding": 64726665,
+    "market_cap": 244602067035
   }
 ]
