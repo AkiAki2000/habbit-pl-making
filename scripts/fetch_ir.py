@@ -85,7 +85,9 @@ def parse_matches(url, html, codes, debug=False):
         if not text:
             continue
         for code in codes:
-            if re.search(rf"(?<!\d){code}(?!\d)", text):
+            # TDnet displays codes zero-padded to 5 digits (e.g. 8798 -> "87980"),
+            # but keep the bare 4-digit form matching too just in case.
+            if re.search(rf"(?<!\d){code}0?(?!\d)", text):
                 link_tag = row.find("a", href=True)
                 link = urllib.parse.urljoin(url, link_tag["href"]) if link_tag else ""
                 title = link_tag.get_text(strip=True) if link_tag else text
