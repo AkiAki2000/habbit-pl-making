@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "date": "2026-07-13",
+    "document_name": "第１四半期決算短信〔日本基準〕（連結）",
+    "fiscal_year_end": "2027-02-28",
+    "net_sales": 42528000000,
+    "operating_income": 3770000000,
+    "ordinary_income": 3846000000,
+    "net_income": 2724000000,
+    "eps": 64.84,
+    "unit": "JPY",
+    "url": "https://www.release.tdnet.info/inbs/081220260629583875.zip",
+    "source": "tdnet_xbrl"
+  }
+]
