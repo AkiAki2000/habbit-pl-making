@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "date": "2026-08-07",
+    "document_name": "第３四半期決算短信〔ＩＦＲＳ〕（連結）",
+    "fiscal_year_end": "2026-09-30",
+    "net_sales": null,
+    "operating_income": null,
+    "ordinary_income": null,
+    "net_income": null,
+    "eps": null,
+    "unit": "JPY",
+    "url": "https://www.release.tdnet.info/inbs/081220260806513307.zip",
+    "source": "tdnet_xbrl"
+  }
+]
