@@ -1,1 +1,41 @@
-[]
+[
+  {
+    "date": "2026-08-10",
+    "document_name": "決算短信〔日本基準〕（連結）",
+    "fiscal_year_end": "2026-06-30",
+    "net_sales": 151689000000,
+    "operating_income": 12145000000,
+    "ordinary_income": 12122000000,
+    "net_income": 8743000000,
+    "eps": 227.23,
+    "unit": "JPY",
+    "url": "https://www.release.tdnet.info/inbs/081220260810516706.zip",
+    "source": "tdnet_xbrl"
+  },
+  {
+    "date": "2026-08-10",
+    "document_name": "第１四半期決算短信〔日本基準〕（連結）",
+    "fiscal_year_end": "2027-03-31",
+    "net_sales": 8316000000,
+    "operating_income": 439000000,
+    "ordinary_income": 505000000,
+    "net_income": 322000000,
+    "eps": 42.74,
+    "unit": "JPY",
+    "url": "https://www.release.tdnet.info/inbs/081220260807513755.zip",
+    "source": "tdnet_xbrl"
+  },
+  {
+    "date": "2026-08-12",
+    "document_name": "第３四半期決算短信〔日本基準〕（連結）",
+    "fiscal_year_end": "2026-09-30",
+    "net_sales": 5791000000,
+    "operating_income": 45000000,
+    "ordinary_income": 31000000,
+    "net_income": 6000000,
+    "eps": 5.82,
+    "unit": "JPY",
+    "url": "https://www.release.tdnet.info/inbs/081220260811517515.zip",
+    "source": "tdnet_xbrl"
+  }
+]
