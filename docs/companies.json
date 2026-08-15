@@ -214,5 +214,14 @@
     "shares_outstanding": 193136265,
     "shares_outstanding_source": "auto (yfinance)",
     "shares_outstanding_updated_at": "2026-08-14"
+  },
+  {
+    "code": "5891",
+    "name": "SAKIGAKEホールディングス",
+    "brands": "京都北白川ラーメン魁力屋",
+    "yahoo_symbol": "5891.T",
+    "shares_outstanding": null,
+    "shares_outstanding_source": "manual",
+    "shares_outstanding_updated_at": null
   }
 ]
