@@ -1196,7 +1196,6 @@
     "close": 4203.0,
     "shares_outstanding": 87917557,
     "market_cap": 369517492071,
-    "source": "backfill",
-    "shares_estimated": true
+    "source": "daily_fetch"
   }
 ]

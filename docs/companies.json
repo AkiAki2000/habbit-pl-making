@@ -94,9 +94,9 @@
     "name": "カッパ・クリエイト",
     "brands": "かっぱ寿司",
     "yahoo_symbol": "7421.T",
-    "shares_outstanding": 49352326,
+    "shares_outstanding": 49352376,
     "shares_outstanding_source": "auto (yfinance)",
-    "shares_outstanding_updated_at": "2026-08-14"
+    "shares_outstanding_updated_at": "2026-08-15"
   },
   {
     "code": "3399",
@@ -220,8 +220,8 @@
     "name": "SAKIGAKEホールディングス",
     "brands": "京都北白川ラーメン魁力屋",
     "yahoo_symbol": "5891.T",
-    "shares_outstanding": null,
-    "shares_outstanding_source": "manual",
-    "shares_outstanding_updated_at": null
+    "shares_outstanding": 5661969,
+    "shares_outstanding_source": "auto (yfinance)",
+    "shares_outstanding_updated_at": "2026-08-15"
   }
 ]
