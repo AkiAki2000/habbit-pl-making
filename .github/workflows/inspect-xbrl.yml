@@ -1,0 +1,34 @@
+name: XBRL構造調査（手動・一時的）
+
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "何日分さかのぼって決算短信を探すか"
+        required: false
+        default: "10"
+      code:
+        description: "証券コードを指定（空なら全銘柄から最初に見つかったもの）"
+        required: false
+        default: ""
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Inspect XBRL
+        run: |
+          ARGS="--days ${{ github.event.inputs.days || '10' }}"
+          if [ -n "${{ github.event.inputs.code }}" ]; then
+            ARGS="$ARGS --code ${{ github.event.inputs.code }}"
+          fi
+          python scripts/inspect_xbrl.py $ARGS
