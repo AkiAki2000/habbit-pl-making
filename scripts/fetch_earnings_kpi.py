@@ -75,15 +75,21 @@ def append_kpi_record(code, record):
 def find_kessan_xbrl_rows(date_str, codes, debug=False):
     """Return list of (code, zip_url) for 決算短信 rows matching our codes on date_str."""
     found = []
+    pages_seen = 0
     for page in range(1, MAX_PAGES_PER_DAY + 1):
         url = f"{TDNET_BASE}I_list_{page:03d}_{date_str}.html"
         try:
             resp = requests.get(url, headers=HEADERS, timeout=20)
-        except requests.RequestException:
+        except requests.RequestException as exc:
+            if debug:
+                print(f"  {date_str}: request error on page {page}: {exc}")
             break
         resp.encoding = "utf-8"
         if resp.status_code != 200 or not resp.text.strip():
+            if debug and page == 1:
+                print(f"  {date_str}: page 1 -> status {resp.status_code}, len {len(resp.text)}")
             break
+        pages_seen += 1
         soup = BeautifulSoup(resp.text, "lxml")
         for row in soup.find_all("tr"):
             # Skip container/wrapper rows that themselves hold nested <tr>s --
@@ -107,8 +113,8 @@ def find_kessan_xbrl_rows(date_str, codes, debug=False):
             xbrl = next((a for a in links if "XBRL" in a.get_text(strip=True)), None)
             if xbrl:
                 found.append((code, urllib.parse.urljoin(url, xbrl["href"])))
-    if debug and found:
-        print(f"  {date_str}: {len(found)} kessan tanshin row(s) with XBRL")
+    if debug and pages_seen:
+        print(f"  {date_str}: {pages_seen} page(s) scanned, {len(found)} kessan tanshin row(s) with XBRL matched")
     return found
 
 
