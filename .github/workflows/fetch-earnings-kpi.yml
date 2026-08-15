@@ -1,0 +1,50 @@
+name: 決算KPI自動抽出（TDnet XBRL）
+
+on:
+  schedule:
+    # UTC 22:10 Sun-Thu = JST 07:10 Mon-Fri（毎朝の株価取得・IR検知の少し後）
+    - cron: "10 22 * * 0-4"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "何日分さかのぼって決算短信を確認するか"
+        required: false
+        default: "5"
+      debug:
+        description: "デバッグログを出力する"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-kpi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Fetch earnings KPI
+        run: |
+          ARGS="--days ${{ github.event.inputs.days || '5' }}"
+          if [ "${{ github.event.inputs.debug }}" = "true" ]; then
+            ARGS="$ARGS --debug"
+          fi
+          python scripts/fetch_earnings_kpi.py $ARGS
+
+      - name: Commit and push new KPI records
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/kpi
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "chore: KPI auto-extract $(date -u +%Y-%m-%d)"
+          git push
