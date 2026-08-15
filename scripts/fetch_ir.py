@@ -115,12 +115,19 @@ def main():
             if result is None:
                 break
             url, html = result
-            if args.debug and not seen_debug_snippet:
-                print("  [debug] first successful page HTML snippet:")
-                print(html[:2000])
-                seen_debug_snippet = True
-
             matches = parse_matches(url, html, codes, debug=args.debug)
+
+            if args.debug and not seen_debug_snippet and html.count("<tr") > 20:
+                # Print a page that actually has real disclosure rows (a
+                # near-empty "no disclosures today" page isn't useful here).
+                print(f"  [debug] snippet of a real listing page ({url}):")
+                soup = BeautifulSoup(html, "lxml")
+                rows = soup.find_all("tr")
+                for row in rows[:15]:
+                    print("  [debug row]", repr(row.get_text(" ", strip=True))[:300])
+                    for a in row.find_all("a", href=True):
+                        print("    [debug link]", a["href"], repr(a.get_text(strip=True))[:120])
+                seen_debug_snippet = True
             for code, title, link, raw_text in matches:
                 event = {
                     "date": day.isoformat(),
