@@ -1,0 +1,50 @@
+name: IR自動検知（TDnet巡回）
+
+on:
+  schedule:
+    # UTC 22:05 Sun-Thu = JST 07:05 Mon-Fri（毎朝の株価取得の少し後）
+    - cron: "5 22 * * 0-4"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "何日分さかのぼって確認するか"
+        required: false
+        default: "5"
+      debug:
+        description: "デバッグログを出力する"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-ir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Fetch IR disclosures
+        run: |
+          ARGS="--days ${{ github.event.inputs.days || '5' }}"
+          if [ "${{ github.event.inputs.debug }}" = "true" ]; then
+            ARGS="$ARGS --debug"
+          fi
+          python scripts/fetch_ir.py $ARGS
+
+      - name: Commit and push new IR events
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/ir
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "chore: IR auto-detect $(date -u +%Y-%m-%d)"
+          git push
