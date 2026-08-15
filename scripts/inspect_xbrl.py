@@ -116,13 +116,16 @@ def main():
             local = el.tag.rsplit(":", 1)[-1].lower()
             if local not in ("nonfraction", "nonnumeric"):
                 continue
-            name = el.get("name", "")
-            context = el.get("contextRef", "")
-            scale = el.get("scale", "")
-            sign = el.get("sign", "")
+            # HTML parsing also lower-cases attribute names (contextRef -> contextref).
+            attrs = {k.lower(): v for k, v in el.attrib.items()}
+            name = attrs.get("name", "")
+            context = attrs.get("contextref", "")
+            unit = attrs.get("unitref", "")
+            scale = attrs.get("scale", "")
+            sign = attrs.get("sign", "")
             val = "".join(el.itertext()).strip()
             if count < 150:
-                print(f"  name={name} context={context} scale={scale} sign={sign} value={val!r}")
+                print(f"  name={name} context={context} unit={unit} scale={scale} sign={sign} value={val!r}")
             count += 1
         print(f"  ({count} facts total)")
 
