@@ -5,6 +5,7 @@
     companies: [],
     pricesByCode: {},
     irByCode: {},
+    kpiByCode: {},
     status: null,
     selectedCode: null,
     range: "all",
@@ -59,6 +60,7 @@
       state.companies.map(async (c) => {
         state.pricesByCode[c.code] = await fetchJson(`data/prices/${c.code}.json`, []);
         state.irByCode[c.code] = await fetchJson(`data/ir/${c.code}.json`, []);
+        state.kpiByCode[c.code] = await fetchJson(`data/kpi/${c.code}.json`, []);
       })
     );
   }
@@ -235,6 +237,58 @@
     span.className = cls;
     span.textContent = `${sign}${diff.toFixed(1)} (${sign}${pct.toFixed(1)}%) 前日比`;
     return span.outerHTML;
+  }
+
+  // ---------- earnings KPI ----------
+
+  function renderKpi(company) {
+    const section = document.getElementById("kpiSection");
+    const list = (state.kpiByCode[company.code] || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+
+    if (!list.length) {
+      section.style.display = "none";
+      return;
+    }
+    section.style.display = "";
+
+    const latest = list[list.length - 1];
+    const row = document.getElementById("kpiStatRow");
+    row.innerHTML = "";
+    const tiles = [
+      { label: `売上高（${latest.document_name}）`, value: fmtMarketCap(latest.net_sales) },
+      { label: "営業利益", value: fmtMarketCap(latest.operating_income) },
+      { label: "経常利益", value: fmtMarketCap(latest.ordinary_income) },
+      { label: "当期純利益", value: fmtMarketCap(latest.net_income) },
+      { label: "EPS", value: latest.eps != null ? `${latest.eps}円` : "—" },
+    ];
+    tiles.forEach((t) => {
+      const div = document.createElement("div");
+      div.className = "stat-tile";
+      div.innerHTML = `<div class="label"></div><div class="value"></div>`;
+      div.querySelector(".label").textContent = t.label;
+      div.querySelector(".value").textContent = t.value;
+      row.appendChild(div);
+    });
+
+    const tbody = document.getElementById("kpiTableBody");
+    tbody.innerHTML = "";
+    list.slice().reverse().forEach((r) => {
+      const tr = document.createElement("tr");
+      [
+        fmtDate(r.date),
+        r.document_name || "—",
+        fmtMarketCap(r.net_sales),
+        fmtMarketCap(r.operating_income),
+        fmtMarketCap(r.ordinary_income),
+        fmtMarketCap(r.net_income),
+        r.eps != null ? `${r.eps}円` : "—",
+      ].forEach((v) => {
+        const td = document.createElement("td");
+        td.textContent = v;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
   }
 
   // ---------- range filter ----------
@@ -464,6 +518,8 @@
       });
       tbody.appendChild(tr);
     });
+
+    renderKpi(company);
 
     const irList = document.getElementById("irList");
     irList.innerHTML = "";
