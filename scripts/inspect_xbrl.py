@@ -91,32 +91,37 @@ def main():
     for n in names:
         print(f"  {n}")
 
-    for n in names:
-        if not n.lower().endswith((".xbrl", ".xml")):
-            continue
-        print(f"\n=== tags in {n} ===")
+    # The real facts live in Inline XBRL (iXBRL) .htm files, tagged with
+    # <ix:nonFraction name="...:Concept" contextRef="..." ...>value</ix:nonFraction>.
+    # Focus on the Summary file first -- it's the short headline-KPI version.
+    summary_files = [n for n in names if "/Summary/" in n and n.lower().endswith(".htm")]
+    other_htm = [n for n in names if n.lower().endswith(".htm") and n not in summary_files]
+    target_files = summary_files + other_htm[:1]  # peek at one attachment file too
+
+    for n in target_files:
+        print(f"\n=== ix:nonFraction / ix:nonNumeric facts in {n} ===")
         data = zf.read(n)
-        try:
-            tree = etree.fromstring(data)
-        except etree.XMLSyntaxError as exc:
-            print(f"  (parse error: {exc})")
+        parser = etree.HTMLParser(recover=True, encoding="utf-8")
+        tree = etree.fromstring(data, parser=parser)
+        if tree is None:
+            print("  (failed to parse)")
             continue
-        seen = {}
+        count = 0
         for el in tree.iter():
             if not isinstance(el.tag, str):
                 continue
             local = etree.QName(el.tag).localname
-            text_val = (el.text or "").strip()
-            if local not in seen and text_val:
-                seen[local] = text_val
-        # Print only tags that look financial/numeric-ish, capped.
-        count = 0
-        for local, val in seen.items():
-            if count >= 80:
-                print("  ... (truncated)")
-                break
-            print(f"  {local} = {val[:60]!r}")
+            if local not in ("nonFraction", "nonNumeric"):
+                continue
+            name = el.get("name", "")
+            context = el.get("contextRef", "")
+            scale = el.get("scale", "")
+            sign = el.get("sign", "")
+            val = "".join(el.itertext()).strip()
+            if count < 150:
+                print(f"  name={name} context={context} scale={scale} sign={sign} value={val!r}")
             count += 1
+        print(f"  ({count} facts total)")
 
 
 if __name__ == "__main__":
