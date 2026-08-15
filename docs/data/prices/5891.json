@@ -1,5 +1,1197 @@
 [
   {
+    "date": "2026-01-05",
+    "close": 1619.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9166727811,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-06",
+    "close": 1664.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9421516416,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-07",
+    "close": 1626.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9206361594,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-08",
+    "close": 1642.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9296953098,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-09",
+    "close": 1639.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9279967191,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-13",
+    "close": 1620.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9172389780,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-14",
+    "close": 1625.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9200699625,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-15",
+    "close": 1639.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9279967191,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-16",
+    "close": 1630.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9229009470,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-19",
+    "close": 1623.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9189375687,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-20",
+    "close": 1620.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9172389780,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-21",
+    "close": 1603.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9076136307,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-22",
+    "close": 1613.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9132755997,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-23",
+    "close": 1616.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9149741904,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-26",
+    "close": 1605.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9087460245,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-27",
+    "close": 1599.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9053488431,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-28",
+    "close": 1555.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8804361795,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-29",
+    "close": 1566.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8866643454,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-01-30",
+    "close": 1588.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8991206772,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-02",
+    "close": 1580.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8945911020,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-03",
+    "close": 1586.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8979882834,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-04",
+    "close": 1580.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8945911020,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-05",
+    "close": 1592.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9013854648,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-06",
+    "close": 1582.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8957234958,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-09",
+    "close": 1597.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9042164493,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-10",
+    "close": 1606.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9093122214,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-12",
+    "close": 1629.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9223347501,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-13",
+    "close": 1625.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9200699625,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-16",
+    "close": 1565.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8860981485,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-17",
+    "close": 1565.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8860981485,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-18",
+    "close": 1570.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8889291330,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-19",
+    "close": 1569.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8883629361,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-20",
+    "close": 1575.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8917601175,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-24",
+    "close": 1623.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9189375687,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-25",
+    "close": 1598.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9047826462,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-26",
+    "close": 1609.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9110108121,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-02-27",
+    "close": 1603.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9076136307,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-02",
+    "close": 1594.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9025178586,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-03",
+    "close": 1560.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8832671640,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-04",
+    "close": 1530.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8662812570,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-05",
+    "close": 1561.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8838333609,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-06",
+    "close": 1569.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8883629361,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-09",
+    "close": 1544.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8742080136,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-10",
+    "close": 1568.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8877967392,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-11",
+    "close": 1548.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8764728012,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-12",
+    "close": 1530.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8662812570,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-13",
+    "close": 1528.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8651488632,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-16",
+    "close": 1513.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8566559097,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-17",
+    "close": 1511.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8555235159,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-18",
+    "close": 1522.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8617516818,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-19",
+    "close": 1524.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8628840756,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-23",
+    "close": 1486.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8413685934,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-24",
+    "close": 1507.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8532587283,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-25",
+    "close": 1521.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8611854849,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-26",
+    "close": 1503.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8509939407,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-27",
+    "close": 1514.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8572221066,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-30",
+    "close": 1507.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8532587283,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-03-31",
+    "close": 1503.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8509939407,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-01",
+    "close": 1509.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8543911221,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-02",
+    "close": 1496.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8470305624,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-03",
+    "close": 1514.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8572221066,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-06",
+    "close": 1520.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8606192880,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-07",
+    "close": 1507.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8532587283,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-08",
+    "close": 1517.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8589206973,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-09",
+    "close": 1485.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8408023965,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-10",
+    "close": 1464.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8289122616,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-13",
+    "close": 1458.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8255150802,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-14",
+    "close": 1473.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8340080337,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-15",
+    "close": 1471.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8328756399,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-16",
+    "close": 1479.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8374052151,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-17",
+    "close": 1488.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8425009872,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-20",
+    "close": 1503.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8509939407,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-21",
+    "close": 1496.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8470305624,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-22",
+    "close": 1444.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8175883236,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-23",
+    "close": 1440.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8153235360,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-24",
+    "close": 1438.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8141911422,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-27",
+    "close": 1430.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8096615670,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-28",
+    "close": 1430.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8096615670,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-04-30",
+    "close": 1418.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8028672042,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-01",
+    "close": 1417.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8023010073,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-07",
+    "close": 1412.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 7994700228,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-08",
+    "close": 1417.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8023010073,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-11",
+    "close": 1417.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8023010073,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-12",
+    "close": 1409.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 7977714321,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-13",
+    "close": 1402.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 7938080538,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-14",
+    "close": 1390.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 7870136910,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-15",
+    "close": 1375.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 7785207375,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-18",
+    "close": 1292.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 7315263948,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-19",
+    "close": 1328.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 7519094832,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-20",
+    "close": 1505.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8521263345,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-21",
+    "close": 1545.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8747742105,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-22",
+    "close": 1578.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8934587082,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-25",
+    "close": 1565.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8860981485,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-26",
+    "close": 1556.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8810023764,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-27",
+    "close": 1548.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8764728012,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-28",
+    "close": 1578.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8934587082,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-05-29",
+    "close": 1558.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8821347702,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-01",
+    "close": 1550.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8776051950,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-02",
+    "close": 1555.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8804361795,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-03",
+    "close": 1569.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8883629361,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-04",
+    "close": 1570.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8889291330,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-05",
+    "close": 1578.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8934587082,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-08",
+    "close": 1585.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8974220865,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-09",
+    "close": 1593.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9019516617,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-10",
+    "close": 1610.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9115770090,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-11",
+    "close": 1597.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9042164493,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-12",
+    "close": 1591.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9008192679,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-15",
+    "close": 1608.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9104446152,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-16",
+    "close": 1605.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9087460245,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-17",
+    "close": 1603.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9076136307,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-18",
+    "close": 1600.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9059150400,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-19",
+    "close": 1610.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9115770090,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-22",
+    "close": 1639.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9279967191,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-23",
+    "close": 1633.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9245995377,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-24",
+    "close": 1633.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9245995377,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-25",
+    "close": 1657.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9381882633,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-26",
+    "close": 1684.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9534755796,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-29",
+    "close": 1600.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9059150400,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-06-30",
+    "close": 1598.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9047826462,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-01",
+    "close": 1559.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8827009671,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-02",
+    "close": 1576.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8923263144,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-03",
+    "close": 1555.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8804361795,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-06",
+    "close": 1555.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8804361795,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-07",
+    "close": 1579.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8940249051,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-08",
+    "close": 1571.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8894953299,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-09",
+    "close": 1570.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8889291330,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-10",
+    "close": 1582.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8957234958,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-13",
+    "close": 1575.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8917601175,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-14",
+    "close": 1585.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8974220865,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-15",
+    "close": 1585.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 8974220865,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-16",
+    "close": 1595.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9030840555,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-17",
+    "close": 1592.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9013854648,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-21",
+    "close": 1600.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9059150400,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-22",
+    "close": 1625.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9200699625,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-23",
+    "close": 1630.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9229009470,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-24",
+    "close": 1620.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9172389780,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-27",
+    "close": 1643.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9302615067,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-28",
+    "close": 1665.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9427178385,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-29",
+    "close": 1668.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9444164292,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-30",
+    "close": 1659.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9393206571,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-07-31",
+    "close": 1640.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9285629160,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-08-03",
+    "close": 1626.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9206361594,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-08-04",
+    "close": 1612.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9127094028,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-08-05",
+    "close": 1600.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9059150400,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-08-06",
+    "close": 1600.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9059150400,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-08-07",
+    "close": 1607.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9098784183,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-08-10",
+    "close": 1623.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9189375687,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-08-12",
+    "close": 1667.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9438502323,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
+    "date": "2026-08-13",
+    "close": 1659.0,
+    "shares_outstanding": 5661969,
+    "market_cap": 9393206571,
+    "source": "backfill",
+    "shares_estimated": true
+  },
+  {
     "date": "2026-08-14",
     "close": 1652.0,
     "shares_outstanding": 5661969,
