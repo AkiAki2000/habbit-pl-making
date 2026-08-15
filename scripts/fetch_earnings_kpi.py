@@ -86,15 +86,27 @@ def find_kessan_xbrl_rows(date_str, codes, debug=False):
             break
         soup = BeautifulSoup(resp.text, "lxml")
         for row in soup.find_all("tr"):
-            text = row.get_text(" ", strip=True)
-            if "決算短信" not in text:
+            # Skip container/wrapper rows that themselves hold nested <tr>s --
+            # matching on their flattened text can bleed multiple unrelated
+            # disclosures together and misattribute one company's XBRL zip to
+            # another. Only consider genuine leaf listing rows.
+            if row.find("tr"):
                 continue
-            for code in codes:
-                if re.search(rf"(?<!\d){code}0?(?!\d)", text):
-                    links = row.find_all("a", href=True)
-                    xbrl = next((a for a in links if "XBRL" in a.get_text(strip=True)), None)
-                    if xbrl:
-                        found.append((code, urllib.parse.urljoin(url, xbrl["href"])))
+            cells = row.find_all("td")
+            if len(cells) < 4:
+                continue
+            # Row layout: 時刻, コード, 会社名, 表題, [XBRL], 上場取引所, 更新履歴
+            code_cell = cells[1].get_text(strip=True)
+            title_cell = cells[3].get_text(strip=True)
+            if "決算短信" not in title_cell:
+                continue
+            code = next((c for c in codes if re.fullmatch(rf"{c}0?", code_cell)), None)
+            if not code:
+                continue
+            links = row.find_all("a", href=True)
+            xbrl = next((a for a in links if "XBRL" in a.get_text(strip=True)), None)
+            if xbrl:
+                found.append((code, urllib.parse.urljoin(url, xbrl["href"])))
     if debug and found:
         print(f"  {date_str}: {len(found)} kessan tanshin row(s) with XBRL")
     return found
