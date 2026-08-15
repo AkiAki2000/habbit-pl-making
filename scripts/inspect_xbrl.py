@@ -110,8 +110,11 @@ def main():
         for el in tree.iter():
             if not isinstance(el.tag, str):
                 continue
-            local = etree.QName(el.tag).localname
-            if local not in ("nonFraction", "nonNumeric"):
+            # lxml's HTML parser isn't namespace-aware, so el.tag is a plain
+            # (lower-cased) string like "ix:nonfraction" -- etree.QName() chokes
+            # on that. Just split on ':' ourselves.
+            local = el.tag.rsplit(":", 1)[-1].lower()
+            if local not in ("nonfraction", "nonnumeric"):
                 continue
             name = el.get("name", "")
             context = el.get("contextRef", "")
