@@ -63,6 +63,10 @@ def fetch_page(date_str, page, debug=False):
         if debug:
             print(f"  [debug] {url} -> request error: {exc}")
         return None
+    # TDnet's pages are UTF-8 (declared via <meta charset> only, not the HTTP
+    # header), so requests' default header-based encoding detection falls back
+    # to ISO-8859-1 and mangles every non-ASCII character. Force UTF-8.
+    resp.encoding = "utf-8"
     if resp.status_code != 200 or not resp.text.strip():
         if debug:
             print(f"  [debug] {url} -> status {resp.status_code}, len {len(resp.text)}")
