@@ -1,9 +1,11 @@
-name: 毎朝の株価取得
+name: 株価取得（朝・夕方）
 
 on:
   schedule:
-    # UTC 22:00 Sun-Thu = JST 07:00 Mon-Fri (平日朝7時)
+    # UTC 22:00 Sun-Thu = JST 07:00 Mon-Fri (平日朝7時、前営業日の終値を反映)
     - cron: "0 22 * * 0-4"
+    # UTC 07:30 Mon-Fri = JST 16:30 Mon-Fri (平日夕方4時半、取引終了後に当日の終値を反映)
+    - cron: "30 7 * * 1-5"
   workflow_dispatch: {}
 
 permissions:

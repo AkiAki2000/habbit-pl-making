@@ -13,14 +13,14 @@ docs/                    GitHub Pages で公開する静的ダッシュボード
   data/kpi/{code}.json     決算短信のKPI履歴（売上高・営業利益・経常利益・純利益・EPS）
   data/status.json         直近の株価自動取得結果（成功・エラー）
 scripts/
-  fetch_prices.py         毎朝実行：最新終値と（可能なら）発行済株式数を自動取得し記録
+  fetch_prices.py         朝・夕方に実行：最新終値と（可能なら）発行済株式数を自動取得し記録
   backfill_prices.py      過去分をまとめて取得（デフォルト2026-01-01〜今日、価格のみ）
   fetch_ir.py             毎朝実行：TDnetを巡回し、追跡銘柄の適時開示を自動検知してIRログに追記
   fetch_earnings_kpi.py   毎朝実行：TDnetの決算短信XBRLから主要KPIを自動抽出してKPIログに追記
   add_ir_event.py         IRイベントを1件手動登録するCLI（自動検知で拾えなかったものの補完用）
   common.py               共通の読み書きヘルパー
 .github/workflows/
-  fetch-daily.yml          平日朝7:00(JST)に自動実行：株価・時価総額を取得
+  fetch-daily.yml          平日朝7:00・夕方16:30(JST)に自動実行：株価・時価総額を取得
   fetch-ir.yml             平日朝7:05(JST)に自動実行：直近5日分のIR開示を検知
   fetch-earnings-kpi.yml   平日朝7:10(JST)に自動実行：直近5日分の決算短信からKPIを抽出
   backfill.yml             手動実行（Actionsタブから）で株価の過去分バックフィル
@@ -32,9 +32,14 @@ scripts/
 
 リポジトリの Settings → Pages で「Deploy from a branch」→ ブランチ: このブランチ（またはmainにマージ後）/ フォルダ: `/docs` を選択してください。有効化すると `https://<ユーザー名>.github.io/<リポジトリ名>/` でダッシュボードが見られます。
 
-### 2. 毎朝の自動取得
+### 2. 株価の自動取得（朝・夕方）
 
-`.github/workflows/fetch-daily.yml` が平日朝7時(JST)に自動実行され、`docs/data/` を更新して自動コミット・プッシュします。Pages は自動で再デプロイされます。手動で今すぐ実行したい場合は GitHub の Actions タブ → 「毎朝の株価取得」→ Run workflow。
+`.github/workflows/fetch-daily.yml` が平日朝7:00と夕方16:30(JST)の2回自動実行され、`docs/data/` を更新して自動コミット・プッシュします。Pages は自動で再デプロイされます。
+
+- 朝7:00の実行は市場が開く前なので、その時点で取得できるのは前営業日の終値です。
+- 夕方16:30の実行は市場が閉まった後（取引終了15:00 JST）なので、その日の終値が当日中に反映されます。同じ日付のレコードは上書きされるだけなので、朝と夕方で重複は発生しません。
+
+手動で今すぐ実行したい場合は GitHub の Actions タブ → 「株価取得（朝・夕方）」→ Run workflow。
 
 ### 3. 過去分のバックフィル（2026年1月〜）
 
