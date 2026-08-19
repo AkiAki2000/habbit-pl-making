@@ -13,9 +13,9 @@
     "name": "すかいらーくホールディングス",
     "brands": "ガスト、バーミヤン、ジョナサン",
     "yahoo_symbol": "3197.T",
-    "shares_outstanding": 227393580,
+    "shares_outstanding": 227421838,
     "shares_outstanding_source": "auto (yfinance)",
-    "shares_outstanding_updated_at": "2026-08-14"
+    "shares_outstanding_updated_at": "2026-08-19"
   },
   {
     "code": "3563",
@@ -94,9 +94,9 @@
     "name": "カッパ・クリエイト",
     "brands": "かっぱ寿司",
     "yahoo_symbol": "7421.T",
-    "shares_outstanding": 49352376,
+    "shares_outstanding": 49352326,
     "shares_outstanding_source": "auto (yfinance)",
-    "shares_outstanding_updated_at": "2026-08-18"
+    "shares_outstanding_updated_at": "2026-08-19"
   },
   {
     "code": "3399",
